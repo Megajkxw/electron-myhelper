@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-
+// import FastOpen from "../views/FileView/FastOpen";
 const routes = [
   {
     path: '/Home',
@@ -13,6 +13,12 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  {
+    path: '/fastopen',
+    name: 'FastOpen',
+    component: () => import('../views/FileView/FastOpen')
+  }
+  ,
   {
     path: '/about',
     name: 'About',

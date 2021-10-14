@@ -13,8 +13,12 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@element-plus/icons": "0.0.11",
+    "cnpm": "^7.1.0",
     "core-js": "^3.6.5",
+    "electron-store": "^8.0.1",
     "element-plus": "^1.1.0-beta.19",
+    "lodash-id": "^0.14.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
@@ -27,12 +31,13 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "electron": "^13.0.0",
+    "electron": "^11.3.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "typescript": "^4.4.3",
     "vue-cli-plugin-electron-builder": "~2.1.1"
   }
 }

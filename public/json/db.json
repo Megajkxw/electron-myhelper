@@ -1,0 +1,13 @@
+{
+  "RECORDS":[
+    {
+      "uid": 1,
+      "title": "lowdb is awesome",
+      "count": 1
+    },
+    {
+      "uid":2 ,
+      "user": {"name": "typicode","age":18}
+    }
+  ]
+}
