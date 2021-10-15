@@ -19,8 +19,8 @@ let win
 async function createWindow() {
   // Create the browser window.
    win = new BrowserWindow({
-    width: 400,
-    height: 550,
+    width: 1300,
+    height: 780,
     frame:false,
      webPreferences: {
       

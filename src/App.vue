@@ -1,10 +1,10 @@
 <template>
   <div id="nav">
-    <div class="management-layout" v-if="!$store.state.isLoginWin">
+    <div class="management-layout">
       <header><win-bar></win-bar></header>
       <div class="content">
         <aside>
-          <el-menu   default-active="/fastopen"  router>
+          <el-menu  default-active="/fastopen"  router>
             <el-sub-menu index="1">
               <template #title> 文件</template>
               <el-menu-item index="/fastopen" >常用应用</el-menu-item>
@@ -25,13 +25,7 @@
         </article>
       </div>
     </div>
-    <router-link to="/Home" >
-
-    </router-link>
   </div>
-  <router-view v-if="$store.state.isLoginWin">
-
-  </router-view>
   <div>
     数据展示面板：
     isLoginWin：{{$store.state.isLoginWin}}
@@ -42,17 +36,13 @@
 
 <script>
   import WinBar from "./components/WinBar";
-  let { remote } = window.require("electron")
+  // let { remote } = window.require("electron")
   export default {
     components: {WinBar},
     methods:{
 
     },
     computed:{
-      isLoginWin(){
-        return remote.getCurrentWindow()==this.$store.loginWin
-      }
-
     }
   }
 </script>
