@@ -1,11 +1,19 @@
 <template>
-    <div id="drag_test" class="accept-file"
+<!--    <div id="drag_test" class="accept-file"-->
+<!--         @drop.prevent="onDrop"-->
+<!--         @dragover.prevent="dragover = true"-->
+<!--         @dragleave.prevent="dragover = false">-->
+
+<!--    </div>-->
+
+
+    数据存储路径： {{dataStorePath}}
+    <el-button type="primary" @click="openApp(dataStorePath)" >打开路径</el-button>
+    <el-button type="primary" @click="openApp(dataStorePath+'/config.json')">打开文件</el-button>
+    <div id="drag_test" class="fastfile-container accept-file"
          @drop.prevent="onDrop"
          @dragover.prevent="dragover = true"
          @dragleave.prevent="dragover = false">
-
-    </div>
-    <div class="fastfile-container"  >
             <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value)">
                 {{key}}
             </button>
@@ -30,6 +38,7 @@
     <br>
     <br>
 
+
 </template>
 
 <script>
@@ -48,14 +57,15 @@
                 fastfile:'空',
                 fileName:'',
                 filePath:'',
-                showData:'...'
+                showData:'...',
+                dataStorePath:''
             }
         },
         mounted() {
             this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
             console.log('数据库数据：')
-
             console.log(this.fastfile)
+            this.dataStorePath=ipcRenderer.sendSync('getDataStorePath')
         },
         methods:{
             splitFileName(text) {
@@ -88,7 +98,9 @@
                     this.$message.error('打开应用失败：'+error)
                 }
                 console.log('打开完成')
-            }
+            },
+
+
         }
     }
 

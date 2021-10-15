@@ -19,8 +19,8 @@ let win
 async function createWindow() {
   // Create the browser window.
    win = new BrowserWindow({
-    width: 1300,
-    height: 780,
+    width: 1250,
+    height: 700,
     frame:false,
      webPreferences: {
       
@@ -167,3 +167,8 @@ function openCalendarWindow () {
 ipcMain.on('openCalendarWindow', e =>
     openCalendarWindow()
 )
+
+
+ipcMain.on('getDataStorePath',event => {
+    event.returnValue=app.getPath('userData')
+})
