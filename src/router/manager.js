@@ -18,4 +18,6 @@ const manager=[
 ]
 
 
+manager.forEach(item=>item.path='/manager'+item.path)
+
 export default manager

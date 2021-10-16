@@ -161,12 +161,54 @@ function openCalendarWindow () {
             nodeIntegration: true
         }
     })
-    calendarWin.loadURL(winURL + '#/about')
+    calendarWin.loadURL(winURL + '#/Dialog')
     calendarWin.on('closed', () => { calendarWin = null })
 }
 ipcMain.on('openCalendarWindow', e =>
     openCalendarWindow()
 )
+
+
+
+
+// 定义calendar窗体
+let suspensionBar
+let suspensionBar_height=60
+// 创建calendar窗口方法
+function openSuspensionBar () {
+    suspensionBar = new BrowserWindow({
+        width: 1250,
+        height: suspensionBar_height,
+        x:200,
+        y:0,
+        // parent: win, // win是主窗口
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    suspensionBar.loadURL(winURL + '#/SuspensionBar')
+    suspensionBar.on('closed', () => { suspensionBar = null })
+}
+ipcMain.on('openSuspensionBar', e =>
+    openSuspensionBar()
+)
+
+ipcMain.on('getSuspensionBar',event => {
+    event.returnValue=suspensionBar
+})
+ipcMain.on('hideSuspensionBar',event => {
+    // suspensionBar.setPosition(400,400)
+    setInterval(()=>{
+        // let pos = suspensionBar.getBounds()
+        // let h = suspensionBar.getSize().height
+        let i=0
+        let pos_y=suspensionBar_height
+        while (pos_y>i){
+            suspensionBar.setPosition(200,pos_y--)
+            i++
+        }
+    }, 500)
+})
 
 
 ipcMain.on('getDataStorePath',event => {

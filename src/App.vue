@@ -1,14 +1,14 @@
 <template>
-  <div id="nav">
+  <div id="nav" v-if="$route.path.startsWith('/manager')||$route.path=='/'">
     <div class="management-layout">
       <header><win-bar></win-bar></header>
       <div class="content">
         <aside>
-          <el-menu  default-active="/fastopen"  router>
+          <el-menu  default-active="/manager/fastopen"  router>
             <el-sub-menu index="1">
               <template #title> 文件</template>
-              <el-menu-item index="/fastopen" >常用应用</el-menu-item>
-              <el-menu-item index="/about">打开文件</el-menu-item>
+              <el-menu-item index="/manager/fastopen" >常用应用</el-menu-item>
+              <el-menu-item index="/manager/about">打开文件</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
 
@@ -27,11 +27,16 @@
     </div>
   </div>
   <div>
-    数据展示面板：
-    isLoginWin：{{$store.state.isLoginWin}}
-    <br>
-    当前路由：{{$route.path}}
+<!--    数据展示面板：-->
+<!--    isLoginWin：{{$store.state.isLoginWin}}-->
+<!--    <br>-->
+<!--    当前路由：{{$route.path}}-->
+<!--    结果：{{!($route.path.startsWith('/manager') )}}-->
   </div>
+
+  <router-view v-if="!($route.path.startsWith('/manager') )">
+  </router-view>
+
 </template>
 
 <script>
@@ -49,6 +54,14 @@
 
 
 <style lang="scss">
+  html,#nav,.content,.management-layout{
+    width: 100%;
+    height: 100%;
+  }
+
+  #nav {
+  }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -57,19 +70,12 @@
   color: #2c3e50;
 }
 
-#nav {
 
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  .management-layout{
+    width: 100%;
+    height: 100%;
   }
-}
-
 
 .home {
   min-height: 97.7vh;
@@ -82,10 +88,13 @@
 .content {
   flex: auto;
   display: flex;
-
+  width: 100%;
+  height: 88.9vh;
 }
 .content article {
-  flex: auto;
+  /*flex: auto;*/
+  width: 100%;
+  height: 100%;
 }
 
 header{
@@ -103,6 +112,12 @@ aside{
 article{
   background: #F3F2FF;
   overflow: hidden;
+  height: 100%;
+  margin: 10px;
 }
+  .management-layout{
+    width: 100%;
+    height: 100%;
+  }
 
 </style>

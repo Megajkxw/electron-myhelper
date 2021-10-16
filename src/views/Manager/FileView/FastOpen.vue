@@ -6,37 +6,43 @@
 
 <!--    </div>-->
 
+<!--    <el-button type="primary" @click="openWin">打开新窗口</el-button>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <br>-->
 
-    数据存储路径： {{dataStorePath}}
-    <el-button type="primary" @click="openApp(dataStorePath)" >打开路径</el-button>
-    <el-button type="primary" @click="openApp(dataStorePath+'/config.json')">打开文件</el-button>
-    <div id="drag_test" class="fastfile-container accept-file"
+    <div  class="fastfile-container accept-file"
          @drop.prevent="onDrop"
          @dragover.prevent="dragover = true"
          @dragleave.prevent="dragover = false">
+        数据存储路径： {{dataStorePath}}
+        <el-button type="primary" @click="openApp(dataStorePath)" >打开路径</el-button>
+        <el-button type="primary" @click="openApp(dataStorePath+'/config.json')">打开文件</el-button>
+        <div id="drag_test" >
             <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value)">
                 {{key}}
             </button>
+        </div>
     </div>
-    接收的文件数据：
-    {{content}}
-    <br>
+<!--    接收的文件数据：-->
+<!--    {{content}}-->
+<!--    <br>-->
 
 
-    <br>
-<!--    数据库中保存的信息：-->
-<!--    {{fastfile}}-->
-    <br>
-    <br>
-    <el-input v-model="fileName" placeholder="Please input" />
-    <el-input v-model="filePath" placeholder="Please input" />
-    <el-button type="primary" @click="addItem">添加</el-button>
-    <br>
-    <br>
-    显示的数据：
-    '{{showData}}'
-    <br>
-    <br>
+<!--    <br>-->
+<!--&lt;!&ndash;    数据库中保存的信息：&ndash;&gt;-->
+<!--&lt;!&ndash;    {{fastfile}}&ndash;&gt;-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <el-input v-model="fileName" placeholder="Please input" />-->
+<!--    <el-input v-model="filePath" placeholder="Please input" />-->
+<!--    <el-button type="primary" @click="addItem">添加</el-button>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    显示的数据：-->
+<!--    '{{showData}}'-->
+<!--    <br>-->
+<!--    <br>-->
 
 
 </template>
@@ -68,6 +74,9 @@
             this.dataStorePath=ipcRenderer.sendSync('getDataStorePath')
         },
         methods:{
+            openWin(){
+                ipcRenderer.send('openSuspensionBar')
+            },
             splitFileName(text) {
                 var pattern = /\.{1}[a-z]{1,}$/;
                 if (pattern.exec(text) !== null) {
@@ -110,9 +119,9 @@
 
 <style scoped>
     .accept-file{
-        width: 100px;
-        height: 100px;
-        background: #42b983;
+        /*width: 100px;*/
+        /*height: 100px;*/
+        /*background: #42b983;*/
     }
     .file-item{
         width: 80px;
@@ -129,9 +138,16 @@
     }
     .fastfile-container{
         width: 100%;
-        display: flex;
+        height: 90vh;
+        /*display: flex;*/
         margin: 10px;
+        /*flex-wrap: wrap;*/
+        /*align-items: flex-start;*/
+        /*background: red;*/
+        /*background: rosybrown;*/
+    }
+    #drag_test{
+        display: flex;
         flex-wrap: wrap;
-        background: rosybrown;
     }
 </style>
