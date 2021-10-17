@@ -16,10 +16,13 @@
          @dragover.prevent="dragover = true"
          @dragleave.prevent="dragover = false">
         数据存储路径： {{dataStorePath}}
-        <el-button type="primary" @click="openApp(dataStorePath)" >打开路径</el-button>
-        <el-button type="primary" @click="openApp(dataStorePath+'/config.json')">打开文件</el-button>
+        <br>
+        <br>
+        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>
+        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>
+        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>
         <div id="drag_test" >
-            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value)">
+            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(key,value)">
                 {{key}}
             </button>
         </div>
@@ -64,7 +67,8 @@
                 fileName:'',
                 filePath:'',
                 showData:'...',
-                dataStorePath:''
+                dataStorePath:'',
+                isOpenMode:true
             }
         },
         mounted() {
@@ -86,12 +90,28 @@
                 }
             },
             onDrop (e) {
+                // this.content=e
+                //  let files=e.dataTransfer.files
+                // console.log(files)
+                // ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[0].name),path:files[0].path})
+                // console.log('文件名为：'+files[0].name)
+                // this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
+
                 this.content=e
-                 let files=e.dataTransfer.files
+                let files=e.dataTransfer.files
+                // for (let file in files){
+                //
+                // }
+                for (let i=0;i<files.length;i++){
+                    ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[i].name),path:files[i].path})
+                }
+                // files.forEach((file)=>{ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(file.name),path:file.path})})
                 console.log(files)
-                ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[0].name),path:files[0].path})
+
                 console.log('文件名为：'+files[0].name)
                 this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
+                console.log('fastfile：---------')
+                console.log(this.fastfile)
             },
             addItem(){
                 ipcRenderer.send('FastFile',{operate:'addItem',name:this.fileName,path:this.filePath})
@@ -99,14 +119,26 @@
                 this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
                 console.log('数据库中的数据：'+ this.fastfile)
             },
-            openApp(path){
-                console.log('开始打开'+path)
-                let error=ipcRenderer.send('openApp',path)
-                this.showData=error
-                if (error!=null){
-                    this.$message.error('打开应用失败：'+error)
+            openApp(fileName,path){
+                if (this.isOpenMode){
+                    console.log('开始打开'+path)
+                    let error=ipcRenderer.send('openApp',path)
+                    this.showData=error
+                    if (error!=null){
+                        this.$message.error('打开应用失败：'+error)
+                    }
+                    console.log('打开完成')
                 }
-                console.log('打开完成')
+                else {
+                    console.log("jjjjjjjjjj")
+                    console.log(this.fastfile)
+                    let aa=ipcRenderer.send('FastFile',{operate:'deleteItem',name:fileName})
+
+                    console.log("删除错误信息：")
+                    console.log(aa)
+                    console.log("--------")
+                    delete this.fastfile[fileName]
+                }
             },
 
 

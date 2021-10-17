@@ -4,11 +4,12 @@ import { app, protocol, BrowserWindow ,ipcMain} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import datastore from "./utils/datastore";
+import db from "./utils/DataStoreHelper";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const exec = require("child_process").exec;
 const fs=require('fs');
 const {shell}  = require('electron')
-
+// const DbHelper = require('utils/DataStoreHelper')
 
 console.log(datastore)
 // Scheme must be registered before the app is ready
@@ -102,18 +103,25 @@ ipcMain.on('maintest', (event, arg) => {
     win.setSize(1000,800)
 })
 
-ipcMain.on('FastFile',(event, args) => {
-    if (args.operate==='addItem'){
-        datastore.store.set('FastFile.'+args.name,args.path)
-        // datastore.fastfile.addItem(args.name,args.path)
-    }
-    else if (args.operate==='deleteItem'){
-        datastore.fastfile.deleteItem(args.name)
-    }
-    else if (args.operate==='getData'){
-        event.returnValue=datastore.fastfile.getData()
-    }
-})
+// ipcMain.on('FastFile',(event, args) => {
+//     if (args.operate==='addItem'){
+//         datastore.store.set('FastFile.'+args.name,args.path)
+//         // datastore.fastfile.addItem(args.name,args.path)
+//     }
+//     else if (args.operate==='deleteItem'){
+//         let isError=false
+//         try {
+//             datastore.fastfile.deleteItem(args.name)
+//         }
+//         catch (e) {
+//             console.log('DataStore删除文件信息失败')
+//             event.returnValue={error:e,isError:isError}
+//         }
+//     }
+//     else if (args.operate==='getData'){
+//         event.returnValue=datastore.fastfile.getData()
+//     }
+// })
 
 ipcMain.on('openApp',(event,args)=>{
     var stat = fs.statSync(args)
@@ -213,4 +221,28 @@ ipcMain.on('hideSuspensionBar',event => {
 
 ipcMain.on('getDataStorePath',event => {
     event.returnValue=app.getPath('userData')
+})
+
+
+
+ipcMain.on('FastFile',(event, args) => {
+    if (args.operate==='addItem'){
+        // datastore.store.set('FastFile.'+args.name,args.path)
+        db.fastOpenHelper.addItem({name:args.name,path:args.path})
+    }
+    else if (args.operate==='deleteItem'){
+        let isError=false
+        try {
+            // datastore.fastfile.deleteItem(args.name)
+            db.fastOpenHelper.deleteItem(args.name)
+        }
+        catch (e) {
+            console.log('DataStore删除文件信息失败')
+            event.returnValue={error:e,isError:isError}
+        }
+    }
+    else if (args.operate==='getData'){
+        // event.returnValue=datastore.fastfile.getData()
+        event.returnValue=db.fastOpenHelper.getAllItem()
+    }
 })

@@ -19,6 +19,7 @@
     "electron-store": "^8.0.1",
     "element-plus": "^1.1.0-beta.19",
     "lodash-id": "^0.14.1",
+    "nedb": "^1.8.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
@@ -31,7 +32,7 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "electron": "^11.3.0",
+    "electron": "^11.5.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
