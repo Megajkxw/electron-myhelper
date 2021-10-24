@@ -1,13 +1,15 @@
 <template>
     <div class="win-bar">
-        <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">
+        <el-button type="primary" @click="login" icon="el-icon-minus" size="small">
         </el-button>
-        <el-button type="success" @click="close" icon="el-icon-close" size="small">
-        </el-button>
-        <el-button type="success" @click="onTop" icon="el-icon-caret-top" size="small">
-        </el-button>
-        <el-button type="success" @click="maximize" icon="el-icon-full-screen" size="small">
-        </el-button>
+<!--        <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">-->
+<!--        </el-button>-->
+<!--        <el-button type="success" @click="close" icon="el-icon-close" size="small">-->
+<!--        </el-button>-->
+<!--        <el-button type="success" @click="onTop" icon="el-icon-caret-top" size="small">-->
+<!--        </el-button>-->
+<!--        <el-button type="success" @click="maximize" icon="el-icon-full-screen" size="small">-->
+<!--        </el-button>-->
         <el-button type="success" @click="this.$router.back()" icon="el-icon-full-screen" size="small">
             back
         </el-button>
@@ -23,7 +25,9 @@
 <script>
     // const { ipcRenderer } = require('electron')
     // const { ipcRenderer } = require('electron')
-    let { remote } = window.require("electron");
+    // import router from "../router";
+
+    let { remote,ipcRenderer } = window.require("electron");
     export default {
         name: "WinBar",
         // methods:{
@@ -50,6 +54,11 @@
             },
             openDevtool(){
                 remote.getCurrentWindow().webContents.openDevTools()
+            },
+            login(){
+                this.$router.push('Login')
+                ipcRenderer.send('WinSizeChange','toLoginWin')
+                // ipcRenderer.send('openLoginWin')
             }
         }
     }

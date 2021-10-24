@@ -5,6 +5,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import datastore from "./utils/datastore";
 import db from "./utils/DataStoreHelper";
+// import database from "./utils/database";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const exec = require("child_process").exec;
 const fs=require('fs');
@@ -33,6 +34,18 @@ async function createWindow() {
       // contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
     }
   })
+
+    ipcMain.on('WinSizeChange', (event,args) =>{
+        if (args==='toLoginWin'){
+            win.setSize(400,550)
+        }
+        else if (args==='toManagementWin'){
+            win.setSize(1250,700)
+        }
+      }
+
+    )
+
 
   ipcMain.on('close', () =>
       win.close()
@@ -185,19 +198,21 @@ let suspensionBar_height=60
 // 创建calendar窗口方法
 function openSuspensionBar () {
     suspensionBar = new BrowserWindow({
-        width: 1250,
-        height: suspensionBar_height,
-        x:200,
-        y:0,
+        // width: 1250,
+        // height: suspensionBar_height,
+        // x:200,
+        // y:0,
+        width: 400,
+        height: 550,
         // parent: win, // win是主窗口
         webPreferences: {
             nodeIntegration: true
         }
     })
-    suspensionBar.loadURL(winURL + '#/SuspensionBar')
+    suspensionBar.loadURL(winURL + '#/Login')
     suspensionBar.on('closed', () => { suspensionBar = null })
 }
-ipcMain.on('openSuspensionBar', e =>
+ipcMain.on('openLoginWin', e =>
     openSuspensionBar()
 )
 

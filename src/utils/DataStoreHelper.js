@@ -39,6 +39,8 @@ const db = new nedb({
 
 // 初始化数据库
 db.count({}, function (err, count) {
+
+    console.log("count错误"+err)
     console.log("数量"+count)
     if (count===0){
         let doc =
