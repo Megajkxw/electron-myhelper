@@ -30,7 +30,8 @@ async function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+         // webSecurity: false
       // contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
     }
   })

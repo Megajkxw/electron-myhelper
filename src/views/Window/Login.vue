@@ -48,6 +48,7 @@
                         console.log(err)//失败回调函数
                         this.result=err
                     })
+                // axios()
 
             }
         }
