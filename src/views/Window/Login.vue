@@ -39,7 +39,7 @@
                 // console.log(loginApi({username: this.username,password: this.password}))
 
                 axios
-                    .post('localhost:8089/login', JSON.stringify({username:this.username,password: this.password}))
+                    .post('apis/login', JSON.stringify({username:this.username,password: this.password}))
                     .then(res => {
                         console.log(res)//成功回调函数
                         this.result=res
@@ -48,7 +48,10 @@
                         console.log(err)//失败回调函数
                         this.result=err
                     })
-                // axios()
+                // this.result=axios({
+                //     method: 'get',
+                //     url: 'apis/user/hello',
+                // });
 
             }
         }

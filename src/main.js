@@ -8,7 +8,7 @@ import axios from "axios";
 
 
 
-
+axios.defaults.withCredentials=true;
 // axios.defaults.baseURL = '/api'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 createApp(App).use(store).use(router).use(ElementPlus).mount('#app')
