@@ -1,6 +1,9 @@
 <template>
     <div class="win-bar">
         <el-button type="primary" @click="login" icon="el-icon-minus" size="small">
+            退出登录
+        </el-button>
+        <el-button type="primary" @click="login" icon="el-icon-minus" size="small">
         </el-button>
 <!--        <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">-->
 <!--        </el-button>-->
@@ -56,10 +59,10 @@
                 remote.getCurrentWindow().webContents.openDevTools()
             },
             login(){
-                this.$router.push('Login')
+                this.$router.push('/login')
                 ipcRenderer.send('WinSizeChange','toLoginWin')
                 // ipcRenderer.send('openLoginWin')
-            }
+            },
         }
     }
 

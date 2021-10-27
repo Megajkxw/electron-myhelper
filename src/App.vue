@@ -41,15 +41,27 @@
 
 <script>
   import WinBar from "./components/WinBar";
+  import localStorageHelper from "./utils/LocalStorageHelper";
   // import router from "./router";
   let { ipcRenderer } = window.require("electron")
   // import {onMounted} from 'vue'
   export default {
     components: {WinBar},
+    beforeCreate() {
+      if (!localStorageHelper.isTokenExist()){
+        this.$router.push('/login')
+        ipcRenderer.send('WinSizeChange','toLoginWin')
+      }
+      // else {
+      //   this.$router.push('Login')
+      //   ipcRenderer.send('WinSizeChange','toManagementWin')
+      // }
+    },
     mounted() {
       // console.log(this.router)
-      this.$router.push('Login')
-      ipcRenderer.send('WinSizeChange','toLoginWin')
+
+
+
     }
   }
 </script>

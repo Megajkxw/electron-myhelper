@@ -27,7 +27,7 @@ let routes = [
   //     }
   //   // ,
     {
-        path: '/Dialog',
+        path: '/dialog',
         name: 'Dialog',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -35,7 +35,7 @@ let routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Dialog/InfoDialog')
     },
     {
-        path: '/SuspensionBar',
+        path: '/suspensionBar',
         name: 'SuspensionBar',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -43,7 +43,7 @@ let routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Applet/SuspensionBar')
     },
     {
-        path: '/Login',
+        path: '/login',
         name: 'Login',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route

@@ -1,11 +1,25 @@
 import axios from 'axios';
 import router from '../router'
+import localStorageHelper from '../utils/LocalStorageHelper'
 
 // 默认超时设置
 axios.defaults.timeout = 50000;
 
 // 相对路径设置
 axios.defaults.baseURL ='';
+
+axios.interceptors.request.use(
+    config=>{
+        let token=localStorageHelper.getToken()
+        if (localStorageHelper.isTokenExist()){
+            config.headers.token=token
+        }
+        return config
+    },
+    err => {
+        return Promise.reject(err);
+    }
+)
 
 //http request 拦截器
 // axios.interceptors.request.use(
