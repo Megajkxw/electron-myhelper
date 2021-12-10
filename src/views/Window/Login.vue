@@ -9,6 +9,8 @@
     <br>
     <br>
     <br>
+    <el-checkbox v-model="isRemember" label="记住我"></el-checkbox>
+    <br>
     <el-button type="primary" @click="login">登录</el-button>
     <br>
     <br>
@@ -21,6 +23,8 @@
 
 <script>
     // import {ref} from 'vue'
+
+
     import WinBar from "../../components/WinBar";
     import localStorageHelper from '../../utils/LocalStorageHelper'
     // import {ipcRenderer} from 'electron'
@@ -36,6 +40,7 @@
                 password: '',
                 result:'空',
                 localStore:'空',
+                isRemember:false
             }
         },
 
@@ -49,9 +54,11 @@
                 // console.log(loginApi({username: this.username,password: this.password}))
                 console.log('----------开始-------------------')
                 console.log(localStorageHelper.getToken())
-                console.log('-----------错误------------------')
+                console.log('-----------结束------------------')
 
                 // this.localStore=localStorageHelper.getToken()
+                const loadingInstance1 = this.$loading({fullscreen: false })
+
                 axios
                     .post('apis/login', JSON.stringify({username:this.username,password: this.password}))
                     .then(res => {
@@ -59,6 +66,13 @@
                         this.result=res
                         if (res.data.code==0){  //登录成功
                             localStorageHelper.saveToken(this.result.data.data)
+                            // if (this.isRemember){
+                            //     localStorageHelper.setRemember_me(true)
+                            // }
+                            // else {
+                            //     localStorageHelper.setRemember_me(false)
+                            // }
+                            localStorageHelper.setRemember_me(this.isRemember)
                             this.$router.push('/manager/fastopen')
                             ipcRenderer.send('WinSizeChange','toManagementWin')
                         }
@@ -67,8 +81,10 @@
                         }
 
                         console.log(localStorageHelper.getToken())
+                        loadingInstance1.close()
                     })
                     .catch(err=> {
+                        this.$message.error('连接服务器失败。'+err)
                         console.log(err)//失败回调函数
                         this.result=err
                     })
