@@ -11,12 +11,12 @@ let db;
 
 db = new Dexie('myhelper');
 db.version(1).stores({fastFile:'++id, file_name, path',} );
+db.open();
 
-
-let  fastFile={
+let  fastFileTable={
      async add(fileName,filePath) {
         //增加数据
-        await db.fastFile.add({file_name: fileName, path: filePath});
+        await db.fastFile.put({file_name: fileName, path: filePath});
     },
     //查询数据
     async query(){
@@ -30,6 +30,9 @@ let  fastFile={
     async delete(id){
         await db.fastFile .delete(id);
     },
+    async list(){
+        return  await db.fastFile.toArray()
+    }
     //排序数据
     // async sort(){
     //     await db.fastFile.orderBy('title');
@@ -38,7 +41,18 @@ let  fastFile={
 
 
 
+console.log("db为")
+console.log(db)
 
-export default {
-    fastFile,
+// fastFileTable.add('test','test')
+async  function test() {
+    console.log("fastfile表数据为")
+    console.log( await  fastFileTable.list())
+}
+test()
+
+
+
+export  {
+    fastFileTable,
 }

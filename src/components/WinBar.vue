@@ -22,6 +22,9 @@
         <el-button type="success" @click="openDevtool" icon="el-icon-full-screen" size="small">
             dev
         </el-button>
+        <el-button type="success" @click="this.$router.push('/test')" icon="el-icon-full-screen" size="small">
+            Test
+        </el-button>
     </div>
 </template>
 

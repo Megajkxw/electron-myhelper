@@ -11,6 +11,7 @@
 <!--    <br>-->
 <!--    <br>-->
 
+
     <div  class="fastfile-container accept-file"
          @drop.prevent="onDrop"
          @dragover.prevent="dragover = true"
@@ -18,15 +19,17 @@
         数据存储路径： {{dataStorePath}}
         <br>
         <br>
-        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>
-        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>
-        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>
+<!--        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>-->
+<!--        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>-->
+<!--        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>-->
         <div id="drag_test" >
-            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(key,value)">
-                {{key}}
+            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value.file_name,value.path)">
+                {{value.file_name}}
             </button>
         </div>
     </div>
+
+
 <!--    接收的文件数据：-->
 <!--    {{content}}-->
 <!--    <br>-->
@@ -54,8 +57,10 @@
 
     // File对象 实例
     // const fs = require('fs');
-    // const fs = require('fs')
+    // const fs = require('fs')`
     let { ipcRenderer } = window.require("electron")
+    // import {fastFileTable} from '@/utils/DexieUtils.js'
+    import {fastFileTable} from '../../../utils/DexieUtils.js'
     export default {
         name: "FastOpen",
         data(){
@@ -72,12 +77,18 @@
             }
         },
         mounted() {
-            this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
+            console.log('数据库数据：')
+            this.loadFastFile()
+            // this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
             console.log('数据库数据：')
             console.log(this.fastfile)
             this.dataStorePath=ipcRenderer.sendSync('getDataStorePath')
         },
         methods:{
+            async loadFastFile(){
+                 this.fastfile= await fastFileTable.list()
+            },
+
             openWin(){
                 ipcRenderer.send('openSuspensionBar')
             },
@@ -89,7 +100,7 @@
                     return text;
                 }
             },
-            onDrop (e) {
+            async onDrop (e) {
                 // this.content=e
                 //  let files=e.dataTransfer.files
                 // console.log(files)
@@ -102,14 +113,21 @@
                 // for (let file in files){
                 //
                 // }
+                //保存数据
                 for (let i=0;i<files.length;i++){
-                    ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[i].name),path:files[i].path})
+                    // ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[i].name),path:files[i].path})
+                    fastFileTable.add(this.splitFileName(files[i].name),files[i].path)
                 }
+                //保存数据
                 // files.forEach((file)=>{ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(file.name),path:file.path})})
+                //保存数据
+                // files.forEach((file)=>{ fastFileTable.add(this.splitFileName(file.name),file.path)})
                 console.log(files)
 
                 console.log('文件名为：'+files[0].name)
-                this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
+                //从新加载数据
+                // this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
+                this.loadFastFile()
                 console.log('fastfile：---------')
                 console.log(this.fastfile)
             },
