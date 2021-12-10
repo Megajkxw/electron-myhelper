@@ -16,17 +16,36 @@
          @drop.prevent="onDrop"
          @dragover.prevent="dragover = true"
          @dragleave.prevent="dragover = false">
-        数据存储路径： {{dataStorePath}}
+<!--        数据存储路径： {{dataStorePath}}-->
+        是否删除文件： <el-switch v-model="isDeleted"></el-switch>
         <br>
+<!--        <div v-for="(value,key) in fileCategory" :key="key" >-->
+<!--            文字：   {{value}}-->
+<!--            &lt;!&ndash;            分类id：{{value.id}}&ndash;&gt;-->
+<!--            &lt;!&ndash;            分类名：{{value.name}}&ndash;&gt;-->
+<!--        </div>-->
+        <div>
+            <el-radio-group v-model="selectedFileCategory.name">
+                <el-radio-button  v-for="(value,key) in fileCategory" :key="key"  :label="value.name" @click="switchBlock(value.id)"></el-radio-button>
+<!--                <el-radio-button label="默认" @click="switchBlock(value.id)"></el-radio-button>-->
+            </el-radio-group>
+        </div>
         <br>
 <!--        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>-->
 <!--        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>-->
 <!--        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>-->
         <div id="drag_test" >
-            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value.file_name,value.path)">
+            <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value.file_name,value.path,value.id)">
                 {{value.file_name}}
             </button>
         </div>
+
+        <div v-if="test">
+            fastfile对象： {{fastfile}}
+            <br>
+            分类：{{fileCategory}}
+        </div>
+
     </div>
 
 
@@ -60,20 +79,27 @@
     // const fs = require('fs')`
     let { ipcRenderer } = window.require("electron")
     // import {fastFileTable} from '@/utils/DexieUtils.js'
-    import {fastFileTable} from '../../../utils/DexieUtils.js'
+    import {fastFileTable,fileCategoryTable} from '../../../utils/DexieUtils.js'
     export default {
         name: "FastOpen",
         data(){
             return{
+                test:true,
                 content:'空',
                 dragover : false,
                 // list:
-                fastfile:'空',
+                fastfile:undefined,
                 fileName:'',
                 filePath:'',
                 showData:'...',
                 dataStorePath:'',
-                isOpenMode:true
+                isOpenMode:true,
+                isDeleted:false,
+                fileCategory:undefined,
+                selectedFileCategory:{
+                    name:'',
+                    id:''
+                },
             }
         },
         mounted() {
@@ -86,9 +112,35 @@
         },
         methods:{
             async loadFastFile(){
-                 this.fastfile= await fastFileTable.list()
-            },
+                console.log('FastOpen.vue  loadFastFile() 开始')
+                // await fileCategoryTable.add("java")
+                // await fileCategoryTable.add("java")
+                this.fileCategory = await fileCategoryTable.list()
+                // if (this.fileCategory[0]!=null){
+                //     this.selectedFileCategory.name=this.fileCategory[0].name
+                //     this.selectedFileCategory.id=this.fileCategory[0].id
+                // }
+                // else {
+                //     this.selectedFileCategory.name='默认'
+                //     this.selectedFileCategory.id=0
+                // }
+                this.selectedFileCategory.name=this.fileCategory[0].name
+                this.selectedFileCategory.id=this.fileCategory[0].id
 
+                // if (this.fileCategory!=null){
+                //     this.fastfile= await fastFileTable.queryByCategory(this.fileCategory[0].id)
+                // }
+                this.fastfile= await fastFileTable.queryByCategory(this.fileCategory[0].id)
+                console.log('FastOpen.vue  loadFastFile() 结束')
+            },
+            async switchBlock(categoryId){
+                console.log('FastOpen.vue  switchBlock() 开始')
+                console.log('categoryId',categoryId)
+                this.selectedFileCategory.id=categoryId
+                this.fastfile= await fastFileTable.queryByCategory(this.selectedFileCategory.id)
+                // this.fastfile= await fastFileTable.queryByCategory(JSON.parse(JSON.stringify(categoryId)))
+                console.log('FastOpen.vue  switchBlock() 结束')
+            },
             openWin(){
                 ipcRenderer.send('openSuspensionBar')
             },
@@ -101,6 +153,7 @@
                 }
             },
             async onDrop (e) {
+                console.log('FastOpen.vue  onDrop() 开始')
                 // this.content=e
                 //  let files=e.dataTransfer.files
                 // console.log(files)
@@ -116,7 +169,7 @@
                 //保存数据
                 for (let i=0;i<files.length;i++){
                     // ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(files[i].name),path:files[i].path})
-                    fastFileTable.add(this.splitFileName(files[i].name),files[i].path)
+                    fastFileTable.add(this.splitFileName(files[i].name),files[i].path,this.selectedFileCategory.id)
                 }
                 //保存数据
                 // files.forEach((file)=>{ipcRenderer.send('FastFile',{operate:'addItem',name:this.splitFileName(file.name),path:file.path})})
@@ -130,6 +183,8 @@
                 this.loadFastFile()
                 console.log('fastfile：---------')
                 console.log(this.fastfile)
+
+                console.log('FastOpen.vue  onDrop() 结束')
             },
             addItem(){
                 ipcRenderer.send('FastFile',{operate:'addItem',name:this.fileName,path:this.filePath})
@@ -137,7 +192,12 @@
                 this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
                 console.log('数据库中的数据：'+ this.fastfile)
             },
-            openApp(fileName,path){
+            openApp(fileName,path,id){
+                if (this.isDeleted){
+                    fastFileTable.delete(id)
+                    this.loadFastFile()
+                    return;
+                }
                 if (this.isOpenMode){
                     console.log('开始打开'+path)
                     let error=ipcRenderer.send('openApp',path)
