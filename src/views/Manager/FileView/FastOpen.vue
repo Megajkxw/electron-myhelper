@@ -10,6 +10,18 @@
 <!--    <br>-->
 <!--    <br>-->
 <!--    <br>-->
+    <el-dialog v-model="dialogTableVisible"  @close="clearDialogContent"  title="新建分类">
+        <div>
+            <el-input v-model="categoryName_new" placeholder="分类名" />
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+              <el-button type="primary" @click="createCategory">创建</el-button>
+            <el-button @click="()=>{dialogTableVisible = false;clearDialogContent}">取消</el-button>
+
+          </span>
+        </template>
+    </el-dialog>
 
 
     <div  class="fastfile-container accept-file"
@@ -28,6 +40,7 @@
             <el-radio-group v-model="selectedFileCategory.name">
                 <el-radio-button  v-for="(value,key) in fileCategory" :key="key"  :label="value.name" @click="switchBlock(value.id)"></el-radio-button>
 <!--                <el-radio-button label="默认" @click="switchBlock(value.id)"></el-radio-button>-->
+                <el-button type="primary" @click="dialogTableVisible = true">+</el-button>
             </el-radio-group>
         </div>
         <br>
@@ -47,28 +60,6 @@
         </div>
 
     </div>
-
-
-<!--    接收的文件数据：-->
-<!--    {{content}}-->
-<!--    <br>-->
-
-
-<!--    <br>-->
-<!--&lt;!&ndash;    数据库中保存的信息：&ndash;&gt;-->
-<!--&lt;!&ndash;    {{fastfile}}&ndash;&gt;-->
-<!--    <br>-->
-<!--    <br>-->
-<!--    <el-input v-model="fileName" placeholder="Please input" />-->
-<!--    <el-input v-model="filePath" placeholder="Please input" />-->
-<!--    <el-button type="primary" @click="addItem">添加</el-button>-->
-<!--    <br>-->
-<!--    <br>-->
-<!--    显示的数据：-->
-<!--    '{{showData}}'-->
-<!--    <br>-->
-<!--    <br>-->
-
 
 </template>
 
@@ -100,6 +91,8 @@
                     name:'',
                     id:''
                 },
+                dialogTableVisible: false,
+                categoryName_new:'',
             }
         },
         mounted() {
@@ -152,6 +145,15 @@
                     return text;
                 }
             },
+            clearDialogContent(){
+                this.categoryName_new=''
+            },
+            async createCategory(){
+                fileCategoryTable.add(this.categoryName_new)
+                this.clearDialogContent()
+                this.dialogTableVisible=false
+                this.fileCategory = await fileCategoryTable.list()
+            },
             async onDrop (e) {
                 console.log('FastOpen.vue  onDrop() 开始')
                 // this.content=e
@@ -180,7 +182,8 @@
                 console.log('文件名为：'+files[0].name)
                 //从新加载数据
                 // this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
-                this.loadFastFile()
+                // this.loadFastFile()
+                this.fastfile= await fastFileTable.queryByCategory(this.selectedFileCategory.id)
                 console.log('fastfile：---------')
                 console.log(this.fastfile)
 
@@ -192,10 +195,10 @@
                 this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
                 console.log('数据库中的数据：'+ this.fastfile)
             },
-            openApp(fileName,path,id){
+            async openApp(fileName,path,id){
                 if (this.isDeleted){
                     fastFileTable.delete(id)
-                    this.loadFastFile()
+                    this.fastfile= await fastFileTable.queryByCategory(this.selectedFileCategory.id)
                     return;
                 }
                 if (this.isOpenMode){
@@ -241,6 +244,8 @@
         border-radius: 10px;
         border-color: transparent;
         margin: 5px;
+        color: #FFFFFF;
+        font-weight: 500;
     }
     .file-item span{
         width: 80px;
