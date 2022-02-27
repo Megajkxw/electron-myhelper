@@ -5,12 +5,15 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import datastore from "./utils/datastore";
 import db from "./utils/DataStoreHelper";
+
 // import database from "./utils/database";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const exec = require("child_process").exec;
+
 const fs=require('fs');
 const {shell}  = require('electron')
 // const DbHelper = require('utils/DataStoreHelper')
+
 
 console.log(datastore)
 // Scheme must be registered before the app is ready
@@ -139,20 +142,28 @@ ipcMain.on('maintest', (event, arg) => {
 
 ipcMain.on('openApp',(event,args)=>{
     var stat = fs.statSync(args)
-    if (stat.isFile()){
-        // exec(args, (error, stdout, stderr) => {
-        //     console.log(JSON.stringify(error, stdout, stderr));
-        // });
-        try {
-            shell.openPath(args)
-        }
-        catch (e) {
-            console.log('打开文件失败')
-            event.returnValue=e;
-        }
+    // if (stat.isFile()){
+    //     // exec(args, (error, stdout, stderr) => {
+    //     //     console.log(JSON.stringify(error, stdout, stderr));
+    //     // });
+    //     try {
+    //         shell.openPath(args)
+    //     }
+    //     catch (e) {
+    //         console.log('打开文件失败')
+    //         event.returnValue=e;
+    //     }
+    // }
+    // else if (stat.isDirectory()){
+    //     shell.showItemInFolder(args)
+    // }
+
+    try {
+        shell.openPath(args)
     }
-    else if (stat.isDirectory()){
-        shell.showItemInFolder(args)
+    catch (e) {
+        console.log('打开文件失败')
+        event.returnValue=e;
     }
 
 })

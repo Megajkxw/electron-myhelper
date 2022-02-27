@@ -38,9 +38,11 @@
 <!--        </div>-->
         <div>
             <el-radio-group v-model="selectedFileCategory.name">
-                <el-radio-button  v-for="(value,key) in fileCategory" :key="key"  :label="value.name" @click="switchBlock(value.id)"></el-radio-button>
-<!--                <el-radio-button label="默认" @click="switchBlock(value.id)"></el-radio-button>-->
-                <el-button type="primary" @click="dialogTableVisible = true">+</el-button>
+                <div class="category-btn-container">
+                    <el-radio-button  v-for="(value,key) in fileCategory" :key="key"  :label="value.name" @click="switchBlock(value.id)"></el-radio-button>
+                    <!--                <el-radio-button label="默认" @click="switchBlock(value.id)"></el-radio-button>-->
+                    <el-button type="success"  @click="dialogTableVisible = true">+</el-button>
+                </div>
             </el-radio-group>
         </div>
         <br>
@@ -75,7 +77,7 @@
         name: "FastOpen",
         data(){
             return{
-                test:true,
+                test:false,
                 content:'空',
                 dragover : false,
                 // list:
@@ -96,12 +98,12 @@
             }
         },
         mounted() {
-            console.log('数据库数据：')
+            // console.log('数据库数据：')
             this.loadFastFile()
             // this.fastfile=ipcRenderer.sendSync('FastFile',{operate:'getData'})
             console.log('数据库数据：')
             console.log(this.fastfile)
-            this.dataStorePath=ipcRenderer.sendSync('getDataStorePath')
+            // this.dataStorePath=ipcRenderer.sendSync('getDataStorePath')
         },
         methods:{
             async loadFastFile(){
@@ -109,6 +111,7 @@
                 // await fileCategoryTable.add("java")
                 // await fileCategoryTable.add("java")
                 this.fileCategory = await fileCategoryTable.list()
+                console.log('FastOpen.vue  loadFastFile()  加载分类完成')
                 // if (this.fileCategory[0]!=null){
                 //     this.selectedFileCategory.name=this.fileCategory[0].name
                 //     this.selectedFileCategory.id=this.fileCategory[0].id
@@ -124,6 +127,7 @@
                 //     this.fastfile= await fastFileTable.queryByCategory(this.fileCategory[0].id)
                 // }
                 this.fastfile= await fastFileTable.queryByCategory(this.fileCategory[0].id)
+                console.log('FastOpen.vue  loadFastFile()  加载默认分类下的 快速文件 完成')
                 console.log('FastOpen.vue  loadFastFile() 结束')
             },
             async switchBlock(categoryId){
@@ -201,25 +205,30 @@
                     this.fastfile= await fastFileTable.queryByCategory(this.selectedFileCategory.id)
                     return;
                 }
-                if (this.isOpenMode){
-                    console.log('开始打开'+path)
-                    let error=ipcRenderer.send('openApp',path)
-                    this.showData=error
-                    if (error!=null){
-                        this.$message.error('打开应用失败：'+error)
-                    }
-                    console.log('打开完成')
+                let error=ipcRenderer.send('openApp',path)
+                this.showData=error
+                if (error!=null){
+                    this.$message.error('打开应用失败：'+error)
                 }
-                else {
-                    console.log("jjjjjjjjjj")
-                    console.log(this.fastfile)
-                    let aa=ipcRenderer.send('FastFile',{operate:'deleteItem',name:fileName})
-
-                    console.log("删除错误信息：")
-                    console.log(aa)
-                    console.log("--------")
-                    delete this.fastfile[fileName]
-                }
+                // if (this.isOpenMode){
+                //     console.log('开始打开'+path)
+                //     let error=ipcRenderer.send('openApp',path)
+                //     this.showData=error
+                //     if (error!=null){
+                //         this.$message.error('打开应用失败：'+error)
+                //     }
+                //     console.log('打开完成')
+                // }
+                // else {
+                //     console.log("jjjjjjjjjj")
+                //     console.log(this.fastfile)
+                //     let aa=ipcRenderer.send('FastFile',{operate:'deleteItem',name:fileName})
+                //
+                //     console.log("删除错误信息：")
+                //     console.log(aa)
+                //     console.log("--------")
+                //     delete this.fastfile[fileName]
+                // }
             },
 
 
@@ -264,5 +273,8 @@
     #drag_test{
         display: flex;
         flex-wrap: wrap;
+    }
+    .category-btn-container{
+        display: flex;
     }
 </style>

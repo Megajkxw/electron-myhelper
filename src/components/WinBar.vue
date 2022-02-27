@@ -16,6 +16,9 @@
         </el-button>
         <el-button type="success" @click="maximize" icon="el-icon-full-screen" size="small">
         </el-button>
+        <el-button type="success" @click="openWin"  size="small">
+            新窗口
+        </el-button>
 
 <!--        <el-button type="success" @click="this.$router.push('/fastopen')" icon="el-icon-full-screen" size="small">-->
 <!--            home-->
@@ -68,6 +71,9 @@
                 ipcRenderer.send('WinSizeChange','toLoginWin')
                 // ipcRenderer.send('openLoginWin')
             },
+            openWin(){
+                ipcRenderer.send('openLoginWin')
+            }
         }
     }
 
