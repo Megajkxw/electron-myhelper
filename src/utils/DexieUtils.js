@@ -12,6 +12,7 @@ let db;
 db = new Dexie('myhelper');
 db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance,category_id,update_date,create_datetime',} );
 db.version(1).stores({fileCategory:'++id, name,order'} );
+db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
 
@@ -111,6 +112,54 @@ let  fastFileTable={
 }
 
 
+let  noteTable={
+    async add(title,content) {
+        //增加数据
+        db.open();
+        await db.note.put({title,content,createTime:new Date(),updateTime:new Date()});
+        db.close();
+    },
+    //查询数据
+    async queryById(note_id){
+        db.open();
+        let res=   await db.note.filter(note=>note.id === note_id);
+        db.close();
+        return res
+    },
+    //查询数据
+    async queryByTitle(note_title){
+        db.open();
+        let res=   await db.note.filter(note=>note.title === note_title);
+        db.close();
+        return res
+    },
+    //修改数据
+    async update(title,content){
+        db.open();
+            await db.note.put({title,content,updateTime:new Date()});
+        db.close();
+    },
+    //删除数据
+    async delete(id){
+        db.open();
+        await db.note .delete(id);
+        db.close();
+    },
+    async list(){
+        db.open();
+        let res=  await db.note.toArray()
+        console.log("加载的笔记数据：")
+        console.log(res)
+        db.close();
+        return res
+    }
+    //排序数据
+    // async sort(){
+    //     await db.fastFile.orderBy('title');
+    // }
+}
+
+
 async function init(){
     db.open();
     // let res =await fileCategoryTable.queryById(0)
@@ -138,5 +187,6 @@ console.log(db)
 export  {
     fastFileTable,
     fileCategoryTable,
+    noteTable,
     init
 }

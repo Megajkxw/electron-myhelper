@@ -6,17 +6,31 @@
         <aside>
           <el-menu  default-active="/manager/fastopen"  router>
             <el-sub-menu index="1">
-              <template #title> 文件</template>
-              <el-menu-item index="/manager/fastopen" >常用应用</el-menu-item>
-              <el-menu-item index="/manager/about">打开文件</el-menu-item>
+              <template  #title>
+                  <span class="sub-menu">文件</span>
+              </template>
+              <el-menu-item class="menu-item" index="/manager/fastopen" >常用应用</el-menu-item>
+              <el-menu-item class="menu-item" index="/manager/about">打开文件</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
-
+                <template  #title>
+                    <span class="sub-menu">应用</span>
+                </template>
+                <el-menu-item class="menu-item" index="/manager/note" >笔记</el-menu-item>
+                <el-menu-item class="menu-item" index="/manager/about">打开文件</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="3">
 
             </el-sub-menu>
           </el-menu>
+
+<!--          <el-menu-->
+<!--                router-->
+<!--                class="left-menu"-->
+<!--                @close="handleClose"-->
+<!--        >-->
+<!--          <menutree :data="leftMenu"></menutree>-->
+<!--        </el-menu>-->
         </aside>
         <article>
           <router-view>
@@ -41,13 +55,22 @@
 
 <script>
   // import Contextmenu from "vue-contextmenujs"
+  // import menutree from "@/components/layout/MenuTree"
+  import leftMenu from "./data/leftMenu";
   import WinBar from "./components/WinBar";
   // import localStorageHelper from "./utils/LocalStorageHelper";
   // import router from "./router";
   // let { ipcRenderer } = window.require("electron")
   // import {onMounted} from 'vue'
   export default {
-    components: {WinBar},
+    components: {WinBar,
+        // menutree
+    },
+    data(){
+      return{
+        leftMenu
+      }
+    },
     beforeCreate() {
       // TODO
       // if (!localStorageHelper.isTokenExist()){
@@ -173,7 +196,9 @@ aside{
   min-width: 200px;
   overflow-y: hidden;
   overflow: hidden;
+  /*background:red;*/
 }
+
 
 article{
   background: #F3F2FF;
@@ -185,5 +210,20 @@ article{
     width: 100%;
     height: 100%;
   }
+
+  .left-menu{
+    background: #42b983;
+    height: 100%;
+    height: 540px;
+  }
+
+    .sub-menu{
+        text-align: left;
+        font-size: 18px;
+        font-weight: 500;
+    }
+    .menu-item{
+
+    }
 
 </style>

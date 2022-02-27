@@ -1,7 +1,7 @@
 
 <template>
     <div class="menutree">
-        <label v-for="menu in data" :key="menu.path">
+        <label v-for="menu in data" :key="menu.name">
             <el-sub-menu :index="menu.path" v-if="menu.children&&menu.children.length!=0">
                 <template #title>
                     <i class="fa fa-address-book"></i>
@@ -46,5 +46,12 @@
     i{
         margin-right: 10px;
     }
+
+
+    .menutree{
+        background: #0d84ff;
+        height: 500px;
+    }
+
 </style>
 

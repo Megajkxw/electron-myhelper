@@ -7,7 +7,7 @@ export default [
             {
                 name:'待办事项',
                 icon:'fa fa-home',
-                path:'/todolist',
+                path:'/bb',
                 children:[
 
                 ]
@@ -34,7 +34,16 @@ export default [
         name: '测试',
         icon:'fa fa-home',
         path: '/test',
-        children:[]
+        children:[
+            {
+                name:'待办事项',
+                icon:'fa fa-home',
+                path:'/todolist',
+                children:[
+
+                ]
+            },
+        ]
     },
     {
         name: '测试',

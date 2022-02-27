@@ -18,7 +18,6 @@
           <span class="dialog-footer">
               <el-button type="primary" @click="createCategory">创建</el-button>
             <el-button @click="()=>{dialogTableVisible = false;clearDialogContent}">取消</el-button>
-
           </span>
         </template>
     </el-dialog>
