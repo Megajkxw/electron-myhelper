@@ -14,11 +14,11 @@
         </el-dialog>
 <!--        删除笔记对话框-->
         <el-dialog v-model="delNoteDialog" title="删除笔记">
-            <span>这是一段信息</span>
+            <span>是否删除这条笔记？</span>
             <template #footer>
                 <span  class="dialog-footer">
                     <el-button @click="delNoteDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="delNoteDialog = false">确 定</el-button>
+                    <el-button type="primary" @click="deleteNote()">确 定</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -28,12 +28,17 @@
             <br>
             <br>
             <el-timeline style="width: 300px">
+<!--                <el-timeline-item v-for="item in noteList" :key="item" :timestamp="item.updateTime" placement="top">-->
                 <el-timeline-item v-for="item in noteList" :key="item" :timestamp="item.updateTime" placement="top">
                     <el-card @click="toNoteDetail(item)"  >
 <!--                    <el-card   @touchstart.prevent="goTouchstart()" @touchend.prevent="goTouchend(item)">-->
-                        <h4>{{item.title}}</h4>
-<!--                        <p>{{item.updateTime.getMonth()+"月"+item.updateTime.getDate()+"日"+item.updateTime.getHours()+"时"}}</p>-->
-<!--                        <p>{{noteUpdateTime()}}</p>-->
+                            <h4 >
+                                {{item.title}}
+<!--                                删除笔记按钮-->
+                                <el-button type="success" size="small" @click.stop="toDeleteNoteDialog(item)" style="position: absolute;top: 50px;right: 10px">x</el-button>
+                            </h4>
+                        <p>{{item.updateTime.getMonth()+"月"+item.updateTime.getDate()+"日"+item.updateTime.getHours()+"时"}}</p>
+<!--                        <p>{{noteUpdateTime(item.updateTime)}}</p>-->
                     </el-card>
                 </el-timeline-item>
 <!--                <el-timeline-item timestamp="2018/4/3" placement="top">-->
@@ -144,8 +149,14 @@
                 await noteTable.updateNote(this.currentNote.id,this.currentNote.title,this.currentNote.content)
                 console.log('更新笔记结束')
             },
-            deleteNote(){
+            toDeleteNoteDialog(item){
                 this.delNoteDialog=true
+                this.currentNote=item
+            },
+            async deleteNote(){
+                this.delNoteDialog=false
+                await noteTable.delete(this.currentNote.id)
+                this.loadNoteList()
             },
         }
     }
