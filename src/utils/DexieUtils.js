@@ -13,7 +13,7 @@ db = new Dexie('myhelper');
 db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance,category_id,update_date,create_datetime',} );
 db.version(1).stores({fileCategory:'++id, name,order'} );
 db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
-db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
+// db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
 
@@ -123,7 +123,7 @@ let  noteTable={
     //查询数据
     async queryById(note_id){
         db.open();
-        let res=   await db.note.filter(note=>note.id === note_id);
+        let res=   await db.note.filter(note=>note.id === note_id).toArray();
         db.close();
         return res
     },
@@ -134,13 +134,18 @@ let  noteTable={
         db.close();
         return res
     },
-    //修改数据
-    async update(id,title,content){
-        db.open();
-            await db.note.put({id,title,content,updateTime:new Date()});
-        db.close();
-    },
-    //删除数据
+    // 修改数据
+        async updateNote(id,title,content){
+            console.log('修改笔记数据：')
+            console.log(id)
+            console.log(title)
+            console.log(content)
+            db.open()
+            // await db.note.put({id,title,content,updateTime:new Date()});
+            await db.note.put({id,title,content,updateTime:new Date()})
+            db.close();
+        },
+        //删除数据
     async delete(id){
         db.open();
         await db.note .delete(id);
