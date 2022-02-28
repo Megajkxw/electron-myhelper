@@ -13,6 +13,7 @@ db = new Dexie('myhelper');
 db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance,category_id,update_date,create_datetime',} );
 db.version(1).stores({fileCategory:'++id, name,order'} );
 db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
+db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
 
@@ -116,7 +117,7 @@ let  noteTable={
     async add(title,content) {
         //增加数据
         db.open();
-        await db.note.put({title,content,createTime:new Date(),updateTime:new Date()});
+        await db.note.add({title,content,createTime:new Date(),updateTime:new Date()});
         db.close();
     },
     //查询数据
@@ -134,9 +135,9 @@ let  noteTable={
         return res
     },
     //修改数据
-    async update(title,content){
+    async update(id,title,content){
         db.open();
-            await db.note.put({title,content,updateTime:new Date()});
+            await db.note.put({id,title,content,updateTime:new Date()});
         db.close();
     },
     //删除数据
@@ -167,6 +168,7 @@ async function init(){
     // console.log(res)
     db.fileCategory.put({name: "默认",id:0})
     console.log("设置了默认分类")
+    db.note.put({title:'测试',content:"第一篇笔记",createDate:new Date(),updateDate:new Date()})
     db.close()
 }
 
