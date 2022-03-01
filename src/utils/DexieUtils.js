@@ -173,7 +173,7 @@ async function init(){
     // console.log(res)
     db.fileCategory.put({name: "默认",id:0})
     console.log("设置了默认分类")
-    db.note.put({title:'测试',content:"第一篇笔记",createDate:new Date(),updateDate:new Date()})
+    db.note.put({title:'测试',content:"第一篇笔记",createTime:new Date(),updateTime:new Date()})
     db.close()
 }
 

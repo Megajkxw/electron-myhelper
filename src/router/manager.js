@@ -15,6 +15,11 @@ const manager=[
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Manager/NoteView/Note')
     },
+    {
+        path: '/task',
+        name: 'Task',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Manager/TaskView/Task')
+    },
 
 ]
 

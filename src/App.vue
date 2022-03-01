@@ -17,7 +17,7 @@
                     <span class="sub-menu">应用</span>
                 </template>
                 <el-menu-item class="menu-item" index="/manager/note" >笔记</el-menu-item>
-                <el-menu-item class="menu-item" index="/manager/about">打开文件</el-menu-item>
+                <el-menu-item class="menu-item" index="/manager/task">当前任务</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="3">
 

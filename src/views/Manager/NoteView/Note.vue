@@ -37,6 +37,7 @@
 <!--                                删除笔记按钮-->
                                 <el-button type="success" size="small" @click.stop="toDeleteNoteDialog(item)" style="position: absolute;top: 50px;right: 10px">x</el-button>
                             </h4>
+<!--                        <p>{{item.updateTime}}</p>-->
                         <p>{{item.updateTime.getMonth()+"月"+item.updateTime.getDate()+"日"+item.updateTime.getHours()+"时"}}</p>
 <!--                        <p>{{noteUpdateTime(item.updateTime)}}</p>-->
                     </el-card>
