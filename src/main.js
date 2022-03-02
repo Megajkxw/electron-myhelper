@@ -17,10 +17,16 @@ VueMarkdownEditor.use(vuepressTheme, {
     Prism,
 });
 
+import VMdPreview from '@kangc/v-md-editor/lib/preview';
+import hljs from 'highlight.js';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+VMdPreview.use(githubTheme, {
+    Hljs: hljs,
+});
 
 
 axios.defaults.withCredentials=true;
 // axios.defaults.baseURL = '/api'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-createApp(App).use(store).use(router).use(ElementPlus).use(VueMarkdownEditor).mount('#app')
+createApp(App).use(store).use(router).use(ElementPlus).use(VueMarkdownEditor).use(VMdPreview).mount('#app')
 
