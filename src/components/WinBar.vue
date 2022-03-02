@@ -72,7 +72,8 @@
                 // ipcRenderer.send('openLoginWin')
             },
             openWin(){
-                ipcRenderer.send('openLoginWin')
+                // ipcRenderer.send('openLoginWin')
+                ipcRenderer.send('openNoteWin')
             }
         }
     }

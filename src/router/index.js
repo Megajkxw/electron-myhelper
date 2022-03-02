@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import manager from "./manager";
+import singleView from "./singleView";
 // import FastOpen from "../views/FileView/FastOpen";
 let routes = [
   {path: '/', redirect: '/manager/fastopen'},
@@ -59,7 +60,8 @@ let routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Test/Test')
     }
 ]
-routes=routes.concat(manager)
+routes=routes.concat(manager,singleView)
+// routes=routes.concat()
 
 const router = createRouter({
   history: createWebHashHistory(),

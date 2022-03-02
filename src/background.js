@@ -208,25 +208,52 @@ ipcMain.on('openCalendarWindow', e =>
 let suspensionBar
 let suspensionBar_height=60
 // 创建calendar窗口方法
-function openSuspensionBar () {
+function openSuspensionBar (args) {
+    let width=400
+    let height=550
+    let page='Login'
+    console.log(args)
+    if (args!=undefined){
+        if (args.width!=null&&args.width!=undefined){
+            width=args.width
+        }
+        if (args.height!=null&&args.height!=undefined){
+            height=args.height
+        }
+        if (args.page!=null&&args.page!=undefined){
+            page=args.page
+        }
+    }
     suspensionBar = new BrowserWindow({
         // width: 1250,
         // height: suspensionBar_height,
         // x:200,
         // y:0,
-        width: 400,
-        height: 550,
+        width,
+        height,
         // parent: win, // win是主窗口
         webPreferences: {
             nodeIntegration: true
         }
     })
-    suspensionBar.loadURL(winURL + '#/Login')
+    console.log('page:')
+    console.log(page)
+    // suspensionBar.loadURL(winURL + '#/Login')
+    suspensionBar.loadURL(winURL + '#/SingleNote')
+    // suspensionBar.loadURL(winURL + '#/'+page)
     suspensionBar.on('closed', () => { suspensionBar = null })
 }
-ipcMain.on('openLoginWin', e =>
-    openSuspensionBar()
+ipcMain.on('openLoginWin', (event, args) =>
+    openSuspensionBar(args)
 )
+
+ipcMain.on('openNoteWin', (event, args) =>
+    openSuspensionBar({
+        page:'SingleNote'
+    })
+)
+
+
 
 ipcMain.on('getSuspensionBar',event => {
     event.returnValue=suspensionBar
