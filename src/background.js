@@ -88,14 +88,14 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS3_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     await installExtension(VUEJS3_DEVTOOLS)
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
   createWindow()
 })
 
@@ -212,6 +212,7 @@ function openSuspensionBar (args) {
     let width=400
     let height=550
     let page='Login'
+    let frame=true
     console.log(args)
     if (args!=undefined){
         if (args.width!=null&&args.width!=undefined){
@@ -223,6 +224,9 @@ function openSuspensionBar (args) {
         if (args.page!=null&&args.page!=undefined){
             page=args.page
         }
+        if (args.frame!=null&&args.frame!=undefined){
+            frame=args.frame
+        }
     }
     suspensionBar = new BrowserWindow({
         // width: 1250,
@@ -231,6 +235,7 @@ function openSuspensionBar (args) {
         // y:0,
         width,
         height,
+        frame,
         // parent: win, // win是主窗口
         webPreferences: {
             nodeIntegration: true
@@ -239,9 +244,10 @@ function openSuspensionBar (args) {
     console.log('page:')
     console.log(page)
     // suspensionBar.loadURL(winURL + '#/Login')
-    suspensionBar.loadURL(winURL + '#/SingleNote')
-    // suspensionBar.loadURL(winURL + '#/'+page)
+    // suspensionBar.loadURL(winURL + '#/SingleNote')
+    suspensionBar.loadURL(winURL + '#/'+page)
     suspensionBar.on('closed', () => { suspensionBar = null })
+    suspensionBar.show()
 }
 ipcMain.on('openLoginWin', (event, args) =>
     openSuspensionBar(args)
@@ -252,7 +258,14 @@ ipcMain.on('openNoteWin', (event, args) =>
         page:'SingleNote'
     })
 )
-
+ipcMain.on('openTaskWin', (event, args) =>
+    openSuspensionBar({
+        page:'SingleTask',
+        frame:false,
+        width:370,
+        height:470,
+    })
+)
 
 
 ipcMain.on('getSuspensionBar',event => {
