@@ -188,14 +188,12 @@ let  taskTable={
         return res
     },
     // 修改数据
-    async update(id,title,content){
+    async update(newTask){
         console.log('修改task数据：')
-        console.log(id)
-        console.log(title)
-        console.log(content)
+        console.log(newTask)
         db.open()
         // await db.note.put({id,title,content,updateTime:new Date()});
-        await db.task.put({id,title,content,updateTime:new Date()})
+        await db.task.put({id:newTask.id,title:newTask.title,content:newTask.content,updateTime:new Date(),createTime:newTask.createTime})
         db.close();
     },
     async updateTitle(id,title){

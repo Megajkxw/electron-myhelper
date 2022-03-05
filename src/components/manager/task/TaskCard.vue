@@ -92,7 +92,8 @@
                 console.log('finish')
             },
             updateTitle(){
-                taskTable.updateTitle(this.taskData.id,this.taskData.title)
+                taskTable.update(this.taskData)
+                // taskTable.updateTitle(this.taskData.id,this.taskData.title)
                 this.$emit('reloadData')
                 this.updateTitleDialog=false
             },
@@ -104,7 +105,8 @@
                 this.$emit('reloadData')
             },
             saveTask(){
-                taskTable.updateContent(this.taskData.id,this.taskData.content)
+                taskTable.update(this.taskData)
+                // taskTable.updateContent(this.taskData.id,this.taskData.content)
                 this.isEditing=false
             }
         }
