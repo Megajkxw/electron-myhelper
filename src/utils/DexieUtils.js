@@ -188,7 +188,7 @@ let  taskTable={
         return res
     },
     // 修改数据
-    async updateNote(id,title,content){
+    async update(id,title,content){
         console.log('修改task数据：')
         console.log(id)
         console.log(title)
@@ -196,6 +196,24 @@ let  taskTable={
         db.open()
         // await db.note.put({id,title,content,updateTime:new Date()});
         await db.task.put({id,title,content,updateTime:new Date()})
+        db.close();
+    },
+    async updateTitle(id,title){
+        console.log('修改task标题：')
+        console.log(id)
+        console.log(title)
+        db.open()
+        // await db.note.put({id,title,content,updateTime:new Date()});
+        await db.task.put({id,title,updateTime:new Date()})
+        db.close();
+    },
+    async updateContent(id,content){
+        console.log('修改task内容：')
+        console.log(id)
+        console.log(content)
+        db.open()
+        // await db.note.put({id,title,content,updateTime:new Date()});
+        await db.task.put({id,content,updateTime:new Date()})
         db.close();
     },
     //删除数据

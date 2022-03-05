@@ -1,15 +1,27 @@
 <template>
     <div class="base">
+        <el-dialog v-model="updateTitleDialog" title="修改任务标题">
+            <el-form ref="formRef" :model="taskData" label-width="120px">
+                <el-form-item label="标题：    ">
+                    <el-input v-model="taskData.title"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary"  @click="updateTitle">创建</el-button>
+                    <el-button  @click="this.updateTitleDialog=false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
         <el-card class="box-card">
             <template #header>
                 <div class="card-header">
                     <span class="title">{{task.title}}</span>
                     <div >
                         <el-button v-show="isEditing!=true" class="button" type="text" @click="isEditing=true">编辑</el-button>
-                        <el-button v-show="isEditing" class="button" type="text" @click="isEditing=false">保存</el-button>
+                        <el-button v-show="isEditing" class="button" type="text"  @click="saveTask">保存</el-button>
                         <el-button v-show="isEableShow" class="button" type="text" @click="openWin()">显示</el-button>
                         <el-button class="button" type="text"  @click="remove">删除</el-button>
-                        <el-button class="button" type="text"  @click="updateTitle">修改标题</el-button>
+                        <el-button class="button" type="text"  @click="toUpdateTitle">修改标题</el-button>
                     </div>
                 </div>
             </template>
@@ -46,6 +58,7 @@
                     title:'',
                     content:''
                 },
+                updateTitleDialog:false,
             }
         },
         props:{
@@ -79,12 +92,21 @@
                 console.log('finish')
             },
             updateTitle(){
-
+                taskTable.updateTitle(this.taskData.id,this.taskData.title)
+                this.$emit('reloadData')
+                this.updateTitleDialog=false
+            },
+            toUpdateTitle(){
+                this.updateTitleDialog=true
             },
             remove(){
                 taskTable.delete(this.taskData.id)
                 this.$emit('reloadData')
             },
+            saveTask(){
+                taskTable.updateContent(this.taskData.id,this.taskData.content)
+                this.isEditing=false
+            }
         }
     }
 </script>
