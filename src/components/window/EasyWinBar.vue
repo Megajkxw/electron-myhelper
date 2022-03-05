@@ -1,6 +1,5 @@
 <template>
     <div class="base">
-        {{error }}
         <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">
         </el-button>
         <el-button type="success" @click="close" icon="el-icon-close" size="small">
@@ -12,6 +11,7 @@
 </template>
 
 <script>
+    // let { remote,ipcRenderer } = window.require("electron");
     let { remote } = window.require("electron");
     export default {
         name: "EasyWinBar",
@@ -22,15 +22,7 @@
         },
         methods:{
             close () {
-                // this.$electron.ipcRenderer.send('close')
-                try {
                     remote.getCurrentWindow().hide(); // 窗口最小化
-                }
-                catch (e) {
-                    console.log('出现错误：')
-                    console.log(e)
-                    this.error=e
-                }
             },
             minimize() {
                 remote.getCurrentWindow().minimize(); // 窗口最小化
@@ -45,6 +37,7 @@
 <style scoped>
     .base{
         height: 40px;
+        /*height: 340px;*/
         background: red;
         -webkit-app-region: drag;
 

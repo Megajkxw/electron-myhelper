@@ -1,11 +1,14 @@
 <template>
     <div class="base">
-        <task-card></task-card>
+        {{taskList}}
+        <task-card  v-for="item in taskList" :task="item" :key="item" ></task-card>
     </div>
 </template>
 
 <script>
     import TaskCard from "../../../components/manager/task/TaskCard";
+    import {taskTable} from "../../../utils/DexieUtils";
+
     export default {
         name: "Task",
         components:{
@@ -14,9 +17,18 @@
         data(){
             return{
                 isEditing:false,
-                txt:''
+                txt:'',
+                taskList:undefined,
             }
-        }
+        },
+        mounted() {
+            this.loadData()
+        },
+        methods:{
+           async loadData(){
+                this.taskList=await taskTable.list()
+            }
+        },
     }
 </script>
 

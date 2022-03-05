@@ -170,44 +170,44 @@ let  taskTable={
     async add(title,content) {
         //增加数据
         db.open();
-        await db.note.add({title,content,createTime:new Date(),updateTime:new Date()});
+        await db.task.add({title,content,createTime:new Date(),updateTime:new Date()});
         db.close();
     },
     //查询数据
-    async queryById(note_id){
+    async queryById(task_id){
         db.open();
-        let res=   await db.note.filter(note=>note.id === note_id).toArray();
+        let res=   await db.task.filter(task=>task.id === task_id).toArray();
         db.close();
         return res
     },
     //查询数据
-    async queryByTitle(note_title){
+    async queryByTitle(task_title){
         db.open();
-        let res=   await db.note.filter(note=>note.title === note_title);
+        let res=   await db.task.filter(task=>task.title === task_title);
         db.close();
         return res
     },
     // 修改数据
     async updateNote(id,title,content){
-        console.log('修改笔记数据：')
+        console.log('修改task数据：')
         console.log(id)
         console.log(title)
         console.log(content)
         db.open()
         // await db.note.put({id,title,content,updateTime:new Date()});
-        await db.note.put({id,title,content,updateTime:new Date()})
+        await db.task.put({id,title,content,updateTime:new Date()})
         db.close();
     },
     //删除数据
     async delete(id){
         db.open();
-        await db.note .delete(id);
+        await db.task .delete(id);
         db.close();
     },
     async list(){
         db.open();
-        let res=  await db.note.toArray()
-        console.log("加载的笔记数据：")
+        let res=  await db.task.toArray()
+        console.log("加载的task数据：")
         console.log(res)
         db.close();
         return res

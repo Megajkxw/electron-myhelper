@@ -1,12 +1,21 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-  state: {
-    userName:'',
-    userPwd:'',
-    loginWin:null,
-    isLoginWin:false,
-    mainWin:null
+  state(){
+    return{
+      task:{
+        id:undefined,
+        title:undefined,
+        content:undefined,
+        createTime:undefined,
+        updateTime:undefined
+      },
+      userName:'',
+      userPwd:'',
+      loginWin:null,
+      isLoginWin:false,
+      mainWin:null
+    }
   },
   mutations: {
     toLoginWin(state){
@@ -14,6 +23,9 @@ export default createStore({
     },
     toMainWin(state){
       state.isLoginWin=false
+    },
+    setCurrentTask(state,task){
+      state.task=task
     }
   },
   actions: {

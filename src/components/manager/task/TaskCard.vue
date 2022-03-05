@@ -3,11 +3,11 @@
         <el-card class="box-card">
             <template #header>
                 <div class="card-header">
-                    <span class="title">卡片名</span>
+                    <span class="title">{{task.title}}</span>
                     <div >
                         <el-button v-show="isEditing!=true" class="button" type="text" @click="isEditing=true">编辑</el-button>
                         <el-button v-show="isEditing" class="button" type="text" @click="isEditing=false">保存</el-button>
-                        <el-button class="button" type="text" @click="openWin">显示</el-button>
+                        <el-button v-show="isEableShow" class="button" type="text" @click="openWin()">显示</el-button>
                         <el-button class="button" type="text"  @click="remove">删除</el-button>
                         <el-button class="button" type="text"  @click="u">修改标题</el-button>
                     </div>
@@ -17,7 +17,7 @@
                 <div class="task-content-show" v-show="!isEditing">
                     <!--                    <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div>-->
                     <!--                    {{txt}}-->
-                    <v-md-preview :text="txt" ></v-md-preview>
+                    <v-md-preview :text="task.content" ></v-md-preview>
                 </div>
                 <div v-show="isEditing" class="text">
                     <el-input
@@ -42,12 +42,30 @@
                 txt:''
             }
         },
+        props:{
+            isEableShow:{
+                default:true,
+            },
+            task:{
+                title:'',
+                content:''
+            },
+            isDataFromStore:{
+                default: false
+            }
+        },
+        mounted() {
+        },
         methods:{
             openWin(){
                 // ipcRenderer.send('openLoginWin')
                 console.log('open')
                 // ipcRenderer.send('openTaskWin',null)
-                ipcRenderer.send('openTaskWin')
+                this.$store.commit('setCurrentTask',this.task)
+                console.log('vuex中保存的task：')
+                console.log(this.$store.state.task)
+                let temp=JSON.stringify(this.task)
+                ipcRenderer.send('openTaskWin',{task:temp})
                 console.log('finish')
             }
         }

@@ -208,7 +208,8 @@ ipcMain.on('openCalendarWindow', e =>
 let suspensionBar
 let suspensionBar_height=60
 // 创建calendar窗口方法
-function openSuspensionBar (args) {
+function createWin (args) {
+    let win=undefined
     let width=400
     let height=550
     let page='Login'
@@ -228,7 +229,7 @@ function openSuspensionBar (args) {
             frame=args.frame
         }
     }
-    suspensionBar = new BrowserWindow({
+    win = new BrowserWindow({
         // width: 1250,
         // height: suspensionBar_height,
         // x:200,
@@ -238,34 +239,62 @@ function openSuspensionBar (args) {
         frame,
         // parent: win, // win是主窗口
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule:true
         }
     })
     console.log('page:')
     console.log(page)
     // suspensionBar.loadURL(winURL + '#/Login')
     // suspensionBar.loadURL(winURL + '#/SingleNote')
-    suspensionBar.loadURL(winURL + '#/'+page)
-    suspensionBar.on('closed', () => { suspensionBar = null })
-    suspensionBar.show()
+    win.loadURL(winURL + '#/'+page)
+    win.on('closed', () => { win = null })
+    win.show()
+    return win
 }
+
+let loginWin;
+let noteWin;
+let taskWin;
 ipcMain.on('openLoginWin', (event, args) =>
-    openSuspensionBar(args)
+    loginWin=createWin(args)
 )
 
 ipcMain.on('openNoteWin', (event, args) =>
-    openSuspensionBar({
+    noteWin=createWin({
         page:'SingleNote'
     })
 )
-ipcMain.on('openTaskWin', (event, args) =>
-    openSuspensionBar({
+
+let task=undefined
+
+ipcMain.on('openTaskWin', (event, args) =>{
+    task=args.task
+    console.log('保存的task数据为：')
+    console.log(task)
+    taskWin=createWin({
         page:'SingleTask',
         frame:false,
         width:370,
         height:470,
+        // height:970,
     })
+    }
 )
+
+ipcMain.on('taskWin', (event, args) =>{
+        if (args.operation=='close'){
+                taskWin.close()
+        }
+        if (args.operation=='taskData'){
+            console.log('取出的task数据为：')
+            console.log(task)
+            event.returnValue=JSON.parse(task)
+        }
+    }
+)
+
+
 
 
 ipcMain.on('getSuspensionBar',event => {
