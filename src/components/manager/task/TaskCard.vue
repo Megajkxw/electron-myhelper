@@ -21,7 +21,7 @@
                 </div>
                 <div v-show="isEditing" class="text">
                     <el-input
-                            v-model="txt"
+                            v-model="taskData.content"
                             rows="13"
                             type="textarea"
                             placeholder="Please input"
@@ -39,7 +39,11 @@
         data(){
             return{
                 isEditing:false,
-                txt:''
+                txt:'',
+                taskData:{
+                    title:'',
+                    content:''
+                },
             }
         },
         props:{
@@ -54,7 +58,11 @@
                 default: false
             }
         },
+        created() {
+            this.taskData=this.task
+        },
         mounted() {
+
         },
         methods:{
             openWin(){
