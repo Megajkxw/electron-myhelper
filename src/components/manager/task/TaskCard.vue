@@ -83,6 +83,11 @@
 <style scoped>
     .base{
         /*margin: 20px;*/
+        overflow: auto;
+        /*height: 600px;*/
+        /*background: red;*/
+        /*display: flex;*/
+        /*align-items: flex-start;*/
     }
     .card-header {
         display: flex;

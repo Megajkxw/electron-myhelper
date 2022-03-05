@@ -32,7 +32,7 @@
 <!--          <menutree :data="leftMenu"></menutree>-->
 <!--        </el-menu>-->
         </aside>
-        <article>
+        <article style="overflow: auto;">
           <router-view>
           </router-view>
           <!--      <router-view></router-view>-->
