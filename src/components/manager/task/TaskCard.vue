@@ -9,7 +9,7 @@
                         <el-button v-show="isEditing" class="button" type="text" @click="isEditing=false">保存</el-button>
                         <el-button v-show="isEableShow" class="button" type="text" @click="openWin()">显示</el-button>
                         <el-button class="button" type="text"  @click="remove">删除</el-button>
-                        <el-button class="button" type="text"  @click="u">修改标题</el-button>
+                        <el-button class="button" type="text"  @click="updateTitle">修改标题</el-button>
                     </div>
                 </div>
             </template>
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+    import {taskTable} from "../../../utils/DexieUtils";
+
     let { ipcRenderer } = window.require("electron");
     export default {
         name: "TaskCard",
@@ -75,7 +77,14 @@
                 let temp=JSON.stringify(this.task)
                 ipcRenderer.send('openTaskWin',{task:temp})
                 console.log('finish')
-            }
+            },
+            updateTitle(){
+
+            },
+            remove(){
+                taskTable.delete(this.taskData.id)
+                this.$emit('reloadData')
+            },
         }
     }
 </script>

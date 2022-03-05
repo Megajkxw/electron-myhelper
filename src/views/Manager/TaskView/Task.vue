@@ -3,7 +3,7 @@
 <!--        {{taskList}}-->
 
 
-        <task-card style="display: inline-block" v-for="item in taskList" :task="item" :key="item" ></task-card>
+        <task-card style="display: inline-block" @reloadData="loadData" v-for="item in taskList" :task="item" :key="item" ></task-card>
 
         <el-button class="fab-btn" circle type="success"  @click="addTask" >+</el-button>
         <el-dialog v-model="addTaskDialog" title="创建任务">
