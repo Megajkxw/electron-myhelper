@@ -15,7 +15,7 @@ db.version(1).stores({fileCategory:'++id, name,order'} );
 db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 db.version(1).stores({task:'++id, title,content,createTime,updateTime'} );
 db.version(1).stores({webnav:'++id, title,url,icon,like,importance,index'} );
-db.version(1).stores({webCategory:'++id, title,index,icon'} );
+db.version(1).stores({webCategory:'++id, title,index'} );
 db.version(1).stores({webItemAndCategory:'++id, itemId,categoryId'} );
 // db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
@@ -70,10 +70,18 @@ let  fileCategoryTable={
 
 
 let  fastFileTable={
+    // await db.fastFile.put({file_name: fileName, path: filePath,category_id:categoryId});
      async add(fileName,filePath,categoryId) {
         //增加数据
          db.open();
-        await db.fastFile.put({file_name: fileName, path: filePath,category_id:categoryId});
+        await db.fastFile.put({file_name: fileName, path: filePath,category_id:categoryId})
+                .catch((e)=>{
+                    console.log('添加快速文件项失败，异常信息为：')
+                    console.log(e)
+                }).then((result)=>{
+                    console.log('添加快速文件项结果：')
+                    console.log(result)
+                });
          db.close()
     },
     //查询数据
@@ -238,9 +246,13 @@ let  taskTable={
 }
 
 let  webCategoryTable={
-    async add(title,index) {
+    async add(title) {
         //增加数据
         db.open();
+        let temp =await db.webCategory.toArray()
+        let index = temp.length
+        console.log('添加网页分类的index：')
+        console.log(index)
         await db.webCategory.add({title,index});
         db.close();
     },
@@ -274,14 +286,26 @@ let  webnavTable={
     async add(webnav) {
         //增加数据
         db.open();
-        await db.webnav.add({title:webnav.title,url:webnav.url,icon:webnav.icon,like:webnav.like,importance:webnav.importance,index:webnav.index});
+        let index = await db.webnav.toArray().length
+        let webnavId;
+        await db.webnav.add({title:webnav.title,url:webnav.url,icon:webnav.icon,like:webnav.like,importance:webnav.importance,index})
+            .then((id)=>{
+                webnavId=id
+            })
         db.close();
+        return webnavId
     },
-
+    // async getIndex() {
+    //     //获取序号
+    //     db.open();
+    //     let res=  await db.webnav.toArray().length()
+    //     db.close();
+    //     return res
+    // },
     //查询数据
     async queryByTitle(task_title){
         db.open();
-        let res=   await db.webnav.filter(task=>task.title === task_title);
+        let res=   await db.webnav.filter(task=>task.title === task_title)
         db.close();
         return res
     },
@@ -317,20 +341,44 @@ let  webnavTable={
     },
     async listByCategory(categoryId){
         db.open();
-        let itemIdList=  await db.webnav.where('categoryId').equals(categoryId)
-        let itemList = await db.webnav.where('id').equals()
-        itemIdList.forEach(id=>{
-            let item=this.queryById(id)
+        // let itemIdList=  await db.webnav.where('categoryId').equals(categoryId).toArray()
+        let itemIdList= await db.webItemAndCategory.filter(row=>row.categoryId === categoryId).toArray()
+        // let itemList = await db.webnav.where('id').equals()
+        console.log('itemIdList：')
+        console.log(itemIdList)
+        let itemList=[]
+        // let _this=this
+        // await  itemIdList.forEach(async row=>{
+        //     let item=  await db.webnav.filter(webnav=>webnav.id === row.id).toArray();
+        //     console.log('查到了该分类下的一个网站项,id为'+row.itemId)
+        //     console.log(item)
+        //     itemList.push(item)
+        // })
+        for (let i=0;i<itemIdList.length;i++){
+            let item=  await db.webnav.filter(webnav=>webnav.id === itemIdList[i]).toArray()
             itemList.push(item)
-        })
+        }
         db.close();
-        // return res
+        console.log('某个分类下的所有网站项数据：')
+        console.log(itemList)
+        return itemList
     }
     //排序数据
     // async sort(){
     //     await db.fastFile.orderBy('title');
     // }
 }
+
+let webItemAndCategoryTable={
+    async add(webnavId,categoryId) {
+        //增加数据
+        db.open();
+        await db.webItemAndCategory.add({itemId:webnavId,categoryId:categoryId})
+        db.close();
+        return webnavId
+    },
+}
+
 
 async function init(){
     db.open();
@@ -341,6 +389,8 @@ async function init(){
     console.log("设置了默认分类")
     db.note.put({title:'测试',content:"第一篇笔记",createTime:new Date(),updateTime:new Date()})
     db.task.put({title:'今日任务',content:"- 学习",createTime:new Date(),updateTime:new Date()})
+    db.webCategory.put({title:'默认',index:0})
+
     db.close()
 }
 
@@ -365,5 +415,6 @@ export  {
     taskTable,
     webCategoryTable,
     webnavTable,
+    webItemAndCategoryTable,
     init
 }
