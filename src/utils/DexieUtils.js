@@ -14,7 +14,9 @@ db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance
 db.version(1).stores({fileCategory:'++id, name,order'} );
 db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 db.version(1).stores({task:'++id, title,content,createTime,updateTime'} );
-// db.version(1).stores({webnav:'++id, title,url,icon,updateTime'} );
+db.version(1).stores({webnav:'++id, title,url,icon,like,importance,index'} );
+db.version(1).stores({webCategory:'++id, title,index,icon'} );
+db.version(1).stores({webItemAndCategory:'++id, itemId,categoryId'} );
 // db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
@@ -235,6 +237,101 @@ let  taskTable={
     // }
 }
 
+let  webCategoryTable={
+    async add(title,index) {
+        //增加数据
+        db.open();
+        await db.webCategory.add({title,index});
+        db.close();
+    },
+    // 修改数据
+    async update(webCategory){
+        db.open()
+        // await db.note.put({id,title,content,updateTime:new Date()});
+        await db.webCategory.put({id:webCategory.id,title:webCategory.title,index:webCategory.index})
+        db.close();
+    },
+    //删除数据
+    async delete(id){
+        db.open();
+        await db.webCategory.delete(id);
+        db.close();
+    },
+    async list(){
+        db.open();
+        let res=  await db.webCategory.toArray()
+        console.log("加载的webCategory数据：")
+        console.log(res)
+        db.close();
+        return res
+    }
+    //排序数据
+    // async sort(){
+    //     await db.fastFile.orderBy('title');
+    // }
+}
+let  webnavTable={
+    async add(webnav) {
+        //增加数据
+        db.open();
+        await db.webnav.add({title:webnav.title,url:webnav.url,icon:webnav.icon,like:webnav.like,importance:webnav.importance,index:webnav.index});
+        db.close();
+    },
+
+    //查询数据
+    async queryByTitle(task_title){
+        db.open();
+        let res=   await db.webnav.filter(task=>task.title === task_title);
+        db.close();
+        return res
+    },
+    // 修改数据
+    async update(webnav){
+        console.log('修改webnav数据：')
+        console.log(webnav)
+        db.open()
+        // await db.note.put({id,title,content,updateTime:new Date()});
+        await db.webnav.put({id:webnav.id,title:webnav.title,url:webnav.url,icon:webnav.icon,like:webnav.like,importance:webnav.importance,index:webnav.index})
+        db.close();
+    },
+    //删除数据
+    async delete(id){
+        db.open();
+        await db.webnav .delete(id);
+        db.close();
+    },
+    async list(){
+        db.open();
+        let res=  await db.webnav.toArray()
+        console.log("加载的task数据：")
+        console.log(res)
+        db.close();
+        return res
+    },
+    //查询数据
+    async queryById(id){
+        db.open();
+        let res=   await db.webnav.filter(webnav=>webnav.id === id).toArray();
+        db.close();
+        return res
+    },
+    async listByCategory(categoryId){
+        db.open();
+        let itemIdList=  await db.webnav.where('categoryId').equals(categoryId)
+        let itemList = await db.webnav.where('id').equals()
+        itemIdList.forEach(id=>{
+            let item=this.queryById(id)
+            itemList.push(item)
+        })
+        db.close();
+        // return res
+    }
+    //排序数据
+    // async sort(){
+    //     await db.fastFile.orderBy('title');
+    // }
+}
+
 async function init(){
     db.open();
     // let res =await fileCategoryTable.queryById(0)
@@ -266,5 +363,7 @@ export  {
     fileCategoryTable,
     noteTable,
     taskTable,
+    webCategoryTable,
+    webnavTable,
     init
 }

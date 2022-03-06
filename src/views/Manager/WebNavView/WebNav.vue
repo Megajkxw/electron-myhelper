@@ -1,5 +1,6 @@
 <template>
     <div>
+        <fab-btn></fab-btn>
 <!--        <i class="fa fa-home fa-lg"></i>-->
         <el-tabs type="border-card">
             <el-tab-pane label="用户管理">
@@ -41,9 +42,10 @@
 
 <script>
     import WebNavItem from "../../../components/manager/webnav/WebNavItem";
+    import FabBtn from "../../../components/common/FabBtn";
     export default {
         name: "WebNav",
-        components: {WebNavItem}
+        components: {FabBtn, WebNavItem}
     }
 </script>
 
