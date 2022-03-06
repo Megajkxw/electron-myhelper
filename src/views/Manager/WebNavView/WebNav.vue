@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        <i class="fa fa-home fa-lg"></i>
     </div>
 </template>
 

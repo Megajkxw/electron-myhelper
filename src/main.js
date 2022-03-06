@@ -24,6 +24,7 @@ VMdPreview.use(githubTheme, {
     Hljs: hljs,
 });
 
+import 'font-awesome/css/font-awesome.min.css'
 
 axios.defaults.withCredentials=true;
 // axios.defaults.baseURL = '/api'
