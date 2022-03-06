@@ -342,10 +342,10 @@ let  webnavTable={
     async listByCategory(categoryId){
         db.open();
         // let itemIdList=  await db.webnav.where('categoryId').equals(categoryId).toArray()
-        let itemIdList= await db.webItemAndCategory.filter(row=>row.categoryId === categoryId).toArray()
+        let webItemAndCategoryList= await db.webItemAndCategory.filter(row=>row.categoryId === categoryId).toArray()
         // let itemList = await db.webnav.where('id').equals()
-        console.log('itemIdList：')
-        console.log(itemIdList)
+        console.log('webItemAndCategoryList：')
+        console.log(webItemAndCategoryList)
         let itemList=[]
         // let _this=this
         // await  itemIdList.forEach(async row=>{
@@ -354,8 +354,8 @@ let  webnavTable={
         //     console.log(item)
         //     itemList.push(item)
         // })
-        for (let i=0;i<itemIdList.length;i++){
-            let item=  await db.webnav.filter(webnav=>webnav.id === itemIdList[i]).toArray()
+        for (let i=0;i<webItemAndCategoryList.length;i++){
+            let item=  await db.webnav.filter(webnav=>webnav.id === webItemAndCategoryList[i].itemId).toArray()
             itemList.push(item)
         }
         db.close();
@@ -385,11 +385,24 @@ async function init(){
     // let res =await fileCategoryTable.queryById(0)
     // console.log("默认分类：")
     // console.log(res)
-    db.fileCategory.put({name: "默认",id:0})
+    await db.fileCategory.put({name: "默认",id:0})
     console.log("设置了默认分类")
-    db.note.put({title:'测试',content:"第一篇笔记",createTime:new Date(),updateTime:new Date()})
-    db.task.put({title:'今日任务',content:"- 学习",createTime:new Date(),updateTime:new Date()})
-    db.webCategory.put({title:'默认',index:0})
+    await  db.note.put({title:'测试',content:"第一篇笔记",createTime:new Date(),updateTime:new Date()})
+    await db.task.put({title:'今日任务',content:"- 学习",createTime:new Date(),updateTime:new Date()})
+    let webCategoryId
+    await db.webCategory.put({title:'默认',index:0}).then((id)=>{
+        webCategoryId=id
+        console.log('默认分类id：')
+        console.log(id)
+    })
+    let itemId
+    await db.webnav.put({title:'Font Awesome',url:'https://fontawesome.dashgame.com',icon:'fa-fonticons',like:0,importance:0,index:0}).then((id)=>{
+        itemId=id
+        console.log('font awesome 项id为：')
+        console.log(id)
+    })
+    console.log('webCategoryId：'+webCategoryId+',itemId：'+itemId)
+    await db.webItemAndCategory.put({itemId:itemId,categoryId:webCategoryId})
 
     db.close()
 }

@@ -2,7 +2,7 @@
     <div>
         <fab-btn @click="addCategoryDialog=true" txt="分类"   ></fab-btn>
         <fab-btn @click="addItemDialog=true" level="2"  txt="项"></fab-btn>
-        <fab-btn @click="addItemDialog=true" level="3"  :txt="itemList"></fab-btn>
+<!--        <fab-btn @click="addItemDialog=true" level="3"  :txt=""></fab-btn>-->
 <!--        <fab-btn level="3"></fab-btn>-->
 
         <el-dialog v-model="addCategoryDialog" title="新建分类">
@@ -37,6 +37,7 @@
             </el-form>
         </el-dialog>
 <!--        <i class="fa fa-home fa-lg"></i>-->
+<!--        {{itemList}}-->
         <el-tabs type="border-card" v-model="activeName"  @tab-click="handleClick">
             <el-tab-pane v-for="tab in tabList" :key="tab.id" :name="tab" :label="tab.title">
                 <div class="panel">
@@ -47,7 +48,7 @@
 <!--                        <web-nav-item></web-nav-item>-->
                         <br>
 <!--                        {{itemList}}-->
-                        <web-nav-item v-for="item in itemList" :key="item"></web-nav-item>
+                        <web-nav-item v-for="item in itemList" :key="item" :webnav="item[0]">{{itemList}}</web-nav-item>
                     </div>
                 </div>
             </el-tab-pane>
