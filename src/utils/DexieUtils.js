@@ -14,6 +14,7 @@ db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance
 db.version(1).stores({fileCategory:'++id, name,order'} );
 db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 db.version(1).stores({task:'++id, title,content,createTime,updateTime'} );
+// db.version(1).stores({webnav:'++id, title,url,icon,updateTime'} );
 // db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
