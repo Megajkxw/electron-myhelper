@@ -52,10 +52,12 @@
         border-radius: 6px;
         cursor:pointer;
         margin:10px;
+        color: white;
     }
     .web-icon{
         margin-right: 10px;
         margin-left: 10px;
+
     }
     .web-text{
 
