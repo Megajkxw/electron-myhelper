@@ -11,6 +11,7 @@
               </template>
               <el-menu-item class="menu-item" index="/manager/fastopen" >常用应用</el-menu-item>
               <el-menu-item class="menu-item" index="/manager/about">打开文件</el-menu-item>
+              <el-menu-item class="menu-item" index="/manager/webNav">网站</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
                 <template  #title>

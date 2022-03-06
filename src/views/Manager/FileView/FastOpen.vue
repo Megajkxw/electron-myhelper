@@ -10,6 +10,7 @@
 <!--    <br>-->
 <!--    <br>-->
 <!--    <br>-->
+<div>
     <el-dialog v-model="dialogTableVisible"  @close="clearDialogContent"  title="新建分类">
         <div>
             <el-input v-model="categoryName_new" placeholder="分类名" />
@@ -24,17 +25,18 @@
 
 
     <div  class="fastfile-container accept-file"
-         @drop.prevent="onDrop"
-         @dragover.prevent="dragover = true"
-         @dragleave.prevent="dragover = false">
-<!--        数据存储路径： {{dataStorePath}}-->
+          @drop.prevent="onDrop"
+          @dragover.prevent="dragover = true"
+          @dragleave.prevent="dragover = false">
+        <!--        数据存储路径： {{dataStorePath}}-->
         是否删除文件： <el-switch v-model="isDeleted"></el-switch>
         <br>
-<!--        <div v-for="(value,key) in fileCategory" :key="key" >-->
-<!--            文字：   {{value}}-->
-<!--            &lt;!&ndash;            分类id：{{value.id}}&ndash;&gt;-->
-<!--            &lt;!&ndash;            分类名：{{value.name}}&ndash;&gt;-->
-<!--        </div>-->
+        <br>
+        <!--        <div v-for="(value,key) in fileCategory" :key="key" >-->
+        <!--            文字：   {{value}}-->
+        <!--            &lt;!&ndash;            分类id：{{value.id}}&ndash;&gt;-->
+        <!--            &lt;!&ndash;            分类名：{{value.name}}&ndash;&gt;-->
+        <!--        </div>-->
         <div>
             <el-radio-group v-model="selectedFileCategory.name">
                 <div class="category-btn-container">
@@ -45,9 +47,9 @@
             </el-radio-group>
         </div>
         <br>
-<!--        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>-->
-<!--        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>-->
-<!--        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>-->
+        <!--        <el-button type="primary" @click="isOpenMode=!isOpenMode">是否打开文件：{{isOpenMode}}</el-button>-->
+        <!--        <el-button type="primary" @click="openApp('',dataStorePath)" >打开路径</el-button>-->
+        <!--        <el-button type="primary" @click="openApp('',dataStorePath+'/config.json')">打开文件</el-button>-->
         <div id="drag_test" >
             <button class="file-item" v-for="(value,key) in fastfile" :key="key" type="primary" @click="openApp(value.file_name,value.path,value.id)">
                 {{value.file_name}}
@@ -61,6 +63,7 @@
         </div>
 
     </div>
+</div>
 
 </template>
 
@@ -260,8 +263,9 @@
         height: 80px;
     }
     .fastfile-container{
-        width: 100%;
-        height: 90vh;
+        /*width: 100%;*/
+        /*height: 100%;*/
+        height: 86vh;
         /*display: flex;*/
         margin: 10px;
         /*flex-wrap: wrap;*/

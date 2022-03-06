@@ -5,8 +5,12 @@ const manager=[
         path: '/fastopen',
         name: 'FastOpen',
         component: () => import('../views/Manager/FileView/FastOpen')
-    }
-    ,
+    },
+    {
+        path: '/webNav',
+        name: 'WebNav',
+        component: () => import('../views/Manager/WebNavView/WebNav')
+    },
     {
         path: '/note',
         name: 'Note',
