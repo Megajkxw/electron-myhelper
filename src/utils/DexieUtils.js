@@ -25,37 +25,97 @@ let  fileCategoryTable={
     async add(category_name) {
         //增加数据
         db.open();
-        await db.fileCategory.put({name: category_name});
+
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined
+        }
+        await db.fileCategory.put({name: category_name})
+            .then((id)=>{
+                 res.id=id
+            })
+            .catch((e)=>{
+                res.error=e
+                res.code=-1
+            });
         db.close();
+        return res
     },
     //查询数据
     async queryById(category_id){
         db.open();
-        let res=   await db.fileCategory.filter(fileCategory=>fileCategory.id === category_id);
+        let res={
+            code:0,
+            data:undefined,
+            error:undefined
+        }
+        res.data=   await db.fileCategory.filter(fileCategory=>fileCategory.id === category_id)
+            .catch((e)=>{
+                res.error=e
+                res.code=-1
+            })
         db.close();
         return res
     },
     //修改数据
     async update(category_name,category_order){
         db.open();
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined
+        }
         if (category_order===null||category_order===undefined)
-            await db.fileCategory.put({name:category_name});
+            await db.fileCategory.put({name:category_name})
+                .catch((e)=>{
+                    res.error=e
+                    res.code=-1
+                })
         else
-            await db.fileCategory.put({name:category_name,order:category_order});
+            await db.fileCategory.put({name:category_name,order:category_order})
+                .catch((e)=>{
+                    res.error=e
+                    res.code=-1
+                })
         db.close();
+        return res
     },
     //删除数据
     async delete(id){
         db.open();
-        await db.fileCategory .delete(id);
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined
+        }
+        await db.fileCategory .delete(id)
+            .catch((e)=>{
+                res.error=e
+                res.code=-1
+            })
         db.close();
     },
     async list(){
         db.open();
-        let res=  await db.fileCategory.toArray()
-        if (res.length==0){
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
+        res.data=  await db.fileCategory.toArray()
+            .catch((e)=>{
+                res.error=e
+                res.code=-1
+            })
+        if (res.data.length==0){
             await init()
-            res=  await db.fileCategory.toArray()
+            res.data=  await db.fileCategory.toArray()
+                .catch((e)=>{
+                    res.error=e
+                    res.code=-1
+                })
         }
         console.log("加载的分类数据：")
         console.log(res)

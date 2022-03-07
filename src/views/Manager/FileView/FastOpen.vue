@@ -112,7 +112,12 @@
                 console.log('FastOpen.vue  loadFastFile() 开始')
                 // await fileCategoryTable.add("java")
                 // await fileCategoryTable.add("java")
-                this.fileCategory = await fileCategoryTable.list()
+                // this.fileCategory = await fileCategoryTable.list()
+                let res=await fileCategoryTable.list()
+                if (res.code==-1){
+                    this.$message.error('加载文件分类失败')
+                }
+                this.fileCategory =res.data
                 console.log('FastOpen.vue  loadFastFile()  加载分类完成')
                 // if (this.fileCategory[0]!=null){
                 //     this.selectedFileCategory.name=this.fileCategory[0].name
