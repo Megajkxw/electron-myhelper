@@ -82,30 +82,73 @@
             }
         },
         async mounted(){
-            this.tabList=await webCategoryTable.list()
+            console.log('mounted --start')
+            // this.tabList=await webCategoryTable.list()
+            // this.activeName=this.tabList[0]
+            // this.itemList=await webnavTable.listByCategory(this.activeName.id)
+
+            let res=await webCategoryTable.list()
+            if (res.code==-1){
+                this.$message.error('加载分类失败'+res.error)
+            }
+            this.tabList=res.data
+            console.log('mounted 获取分类的数据：')
+            console.log(res.data)
+            if (this.tabList.length==0){
+                return
+            }
             this.activeName=this.tabList[0]
-            this.itemList=await webnavTable.listByCategory(this.activeName.id)
+            console.log('activeName：')
+            console.log(this.activeName)
+            let itemListRes=await webnavTable.listByCategory(this.activeName.id)
+            console.log('经过webnavTable.listByCategory')
+            if (itemListRes.code==-1){
+                this.$message.error('加载网站导航项失败'+res.error)
+            }
+            this.itemList=itemListRes.data
 
             console.log('tabList数据：')
             console.log(this.tabList)
             console.log('itemList数据：')
             console.log(this.itemList)
+            console.log('mounted --end')
         },
         methods:{
             async loadCategoryData(){
-                this.tabList=await webCategoryTable.list()
-                this.itemList=await webnavTable.listByCategory(this.activeName.id)
+                console.log('loadCategoryData --start')
+                // this.tabList=await webCategoryTable.list()
+                // this.itemList=await webnavTable.listByCategory(this.activeName.id)
+
+                let tabListRes=await webCategoryTable.list()
+                if (tabListRes.code==-1){
+                    this.$message.error('加载分类失败'+tabListRes.error)
+                }
+                this.tabList=tabListRes.data
+                let itemListRes=await webnavTable.listByCategory(this.activeName.id)
+                this.itemList=itemListRes.data
+                if (itemListRes.code==-1){
+                    this.$message.error('加载网站导航项失败'+itemListRes.error)
+                }
+
+
                 console.log('重新加载的tablist数据：')
                 console.log(this.tabList)
+
+                console.log('loadCategoryData --end')
             },
             async cancelCreateCategory(){
                 this.addCategoryDialog=false
             },
             async addCategory(){
-                await webCategoryTable.add(this.currentCategory.title)
+                console.log('addCategory --start')
+                let res=await webCategoryTable.add(this.currentCategory.title)
+                if (res.code==-1){
+                    this.$message.error('加载网站导航项失败'+res.error)
+                }
                 this.loadCategoryData()
                 this.addCategoryDialog=false
                 this.activeName=this.tabList[this.tabList.length-1]
+                console.log('addCategory --end')
             },
             selectCurrentCategory(tab){
                 this.currentCategory=tab
@@ -113,27 +156,40 @@
                 console.log(tab)
             },
             async handleClick() {
+                console.log('handleClick --start')
                 console.log('选中的tab：')
                 console.log(this.activeName)
 
 
-                this.itemList=await webnavTable.listByCategory(this.activeName.id)
+                let itemListRes=await webnavTable.listByCategory(this.activeName.id)
+                if (itemListRes.code==-1){
+                    this.$message.error('加载网站导航项失败'+itemListRes.error)
+                }
+                this.itemList=itemListRes.data
 
                 console.log('加载当前选项卡对应的网站项数据：')
                 console.log(this.itemList)
-                console.log('itemList数组长度：')
-                console.log(this.itemList.length)
+                // console.log('itemList数组长度：')
+                // console.log(this.itemList.length)
                 // console.log(this.itemList.toArray())
                 console.log([1,2])
+                console.log('handleClick --end')
             },
             cancelCreateWebNav(){
                 this.addItemDialog=false
             },
             async addWebnav(){
-                let webnavId= await webnavTable.add(this.currentWebnav)
+                console.log('addWebnav --start')
+                let addRes= await webnavTable.add(this.currentWebnav)
+                if (addRes.code==-1){
+                    this.$message.error('添加网站导航项失败'+addRes.error)
+                }
+                let webnavId= addRes.data
+
                 await webItemAndCategoryTable.add(webnavId,this.activeName.id)
                 this.itemList=await webnavTable.listByCategory(this.activeName.id)
                 this.addItemDialog=false
+                console.log('addWebnav --end')
             }
         }
 

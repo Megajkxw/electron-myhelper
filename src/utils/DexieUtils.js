@@ -12,11 +12,11 @@ let db;
 db = new Dexie('myhelper');
 db.version(1).stores({fastFile:'++id, file_name, path,txt,order,isTop,improtance,category_id,update_date,create_datetime',} );
 db.version(1).stores({fileCategory:'++id, name,order'} );
-db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
-db.version(1).stores({task:'++id, title,content,createTime,updateTime'} );
-db.version(1).stores({webnav:'++id, title,url,icon,like,importance,index'} );
-db.version(1).stores({webCategory:'++id, title,index'} );
-db.version(1).stores({webItemAndCategory:'++id, itemId,categoryId'} );
+db.version(2).stores({note:'++id, title,content,createTime,updateTime'} );
+db.version(2).stores({task:'++id, title,content,createTime,updateTime'} );
+db.version(2).stores({webnav:'++id, title,url,icon,like,importance,index'} );
+db.version(2).stores({webCategory:'++id, title,index'} );
+db.version(2).stores({webItemAndCategory:'++id, itemId,categoryId'} );
 // db.version(1).stores({note:'++id, title,content,createTime,updateTime'} );
 
 
@@ -309,29 +309,80 @@ let  webCategoryTable={
     async add(title) {
         //增加数据
         db.open();
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
         let temp =await db.webCategory.toArray()
         let index = temp.length
         console.log('添加网页分类的index：')
         console.log(index)
-        await db.webCategory.add({title,index});
+        await db.webCategory.add({title,index})
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('添加webnav分类失败')
+                console.log(e)
+            })
         db.close();
+        return res
     },
     // 修改数据
     async update(webCategory){
         db.open()
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
         // await db.note.put({id,title,content,updateTime:new Date()});
         await db.webCategory.put({id:webCategory.id,title:webCategory.title,index:webCategory.index})
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('更新webnav分类失败')
+                console.log(e)
+            })
         db.close();
+        return res
     },
     //删除数据
     async delete(id){
         db.open();
-        await db.webCategory.delete(id);
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
+        await db.webCategory.delete(id)
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('删除webnav分类失败')
+                console.log(e)
+            })
         db.close();
+        return res
     },
     async list(){
         db.open();
-        let res=  await db.webCategory.toArray()
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
+        res.data=  await db.webCategory.toArray()
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('获取webnav分类列表失败')
+                console.log(e)
+            })
         console.log("加载的webCategory数据：")
         console.log(res)
         db.close();
@@ -348,12 +399,25 @@ let  webnavTable={
         db.open();
         let index = await db.webnav.toArray().length
         let webnavId;
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
         await db.webnav.add({title:webnav.title,url:webnav.url,icon:webnav.icon,like:webnav.like,importance:webnav.importance,index})
             .then((id)=>{
                 webnavId=id
             })
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('添加webnav项列表失败')
+                console.log(e)
+            })
         db.close();
-        return webnavId
+        res.data=webnavId
+        return  res
     },
     // async getIndex() {
     //     //获取序号
@@ -386,9 +450,19 @@ let  webnavTable={
     },
     async list(){
         db.open();
-        let res=  await db.webnav.toArray()
-        console.log("加载的task数据：")
-        console.log(res)
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
+        res.data=  await db.webnav.toArray()
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('获取webnav项列表失败')
+                console.log(e)
+            })
         db.close();
         return res
     },
@@ -401,6 +475,13 @@ let  webnavTable={
     },
     async listByCategory(categoryId){
         db.open();
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
+
         // let itemIdList=  await db.webnav.where('categoryId').equals(categoryId).toArray()
         let webItemAndCategoryList= await db.webItemAndCategory.filter(row=>row.categoryId === categoryId).toArray()
         // let itemList = await db.webnav.where('id').equals()
@@ -414,14 +495,23 @@ let  webnavTable={
         //     console.log(item)
         //     itemList.push(item)
         // })
+
+
         for (let i=0;i<webItemAndCategoryList.length;i++){
             let item=  await db.webnav.filter(webnav=>webnav.id === webItemAndCategoryList[i].itemId).toArray()
+                .catch((e)=>{
+                    res.code=-1
+                    res.error=e
+                    console.log('获取webnav项列表失败')
+                    console.log(e)
+                })
             itemList.push(item)
         }
         db.close();
         console.log('某个分类下的所有网站项数据：')
         console.log(itemList)
-        return itemList
+        res.data=itemList
+        return res
     }
     //排序数据
     // async sort(){
@@ -433,11 +523,25 @@ let webItemAndCategoryTable={
     async add(webnavId,categoryId) {
         //增加数据
         db.open();
+        let res={
+            code:0,
+            id:undefined,
+            error:undefined,
+            data:undefined
+        }
         await db.webItemAndCategory.add({itemId:webnavId,categoryId:categoryId})
+            .catch((e)=>{
+                res.code=-1
+                res.error=e
+                console.log('获取webnav分类列表失败')
+                console.log(e)
+            })
         db.close();
-        return webnavId
+        return res
     },
 }
+
+
 
 
 async function init(){
@@ -449,6 +553,17 @@ async function init(){
     console.log("设置了默认分类")
     await  db.note.put({title:'测试',content:"第一篇笔记",createTime:new Date(),updateTime:new Date()})
     await db.task.put({title:'今日任务',content:"- 学习",createTime:new Date(),updateTime:new Date()})
+    // db.close();
+}
+
+async function webnavInit(){
+    db.open();
+    let res=await db.webCategory.toArray()
+    console.log('webnavInit--获取的分类数据：')
+    console.log(res)
+    if (res.length!=0){
+        return
+    }
     let webCategoryId
     await db.webCategory.put({title:'默认',index:0}).then((id)=>{
         webCategoryId=id
@@ -462,13 +577,12 @@ async function init(){
         console.log(id)
     })
     console.log('webCategoryId：'+webCategoryId+',itemId：'+itemId)
+    db.open();
     await db.webItemAndCategory.put({itemId:itemId,categoryId:webCategoryId})
 
-    db.close()
+    // db.close()
 }
-
-
-
+webnavInit()
 console.log("db为")
 console.log(db)
 

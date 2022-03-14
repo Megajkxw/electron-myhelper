@@ -115,9 +115,12 @@
                 // this.fileCategory = await fileCategoryTable.list()
                 let res=await fileCategoryTable.list()
                 if (res.code==-1){
-                    this.$message.error('加载文件分类失败')
+                    this.$message.error('加载文件分类失败'+res.error)
                 }
                 this.fileCategory =res.data
+                if (this.fileCategory.length==0){
+                    return
+                }
                 console.log('FastOpen.vue  loadFastFile()  加载分类完成')
                 // if (this.fileCategory[0]!=null){
                 //     this.selectedFileCategory.name=this.fileCategory[0].name

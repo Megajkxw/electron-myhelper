@@ -342,3 +342,33 @@ ipcMain.on('FastFile',(event, args) => {
         event.returnValue=db.fastOpenHelper.getAllItem()
     }
 })
+
+
+// 获取可执行文件位置
+const ex=process.execPath;
+
+// 定义事件，渲染进程中直接使用
+
+// 开启 开机自启动
+ipcMain.on('openAutoStart',()=>{
+    console.log('updateExe',ex)
+    app.setLoginItemSettings({
+        openAtLogin: true,
+        path: ex,
+        args: []
+    });
+});
+// 关闭 开机自启动
+ipcMain.on('closeAutoStart',()=>{
+    app.setLoginItemSettings({
+        openAtLogin: false,
+        path: ex,
+        args: []
+    });
+})
+
+app.setLoginItemSettings({
+    openAtLogin: true,
+    path: ex,
+    args: []
+});

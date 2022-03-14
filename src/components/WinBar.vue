@@ -1,24 +1,23 @@
 <template>
     <div class="win-bar">
-        <el-button type="primary" @click="login"  size="small">
-            退出登录
-        </el-button>
-<!--        <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">-->
+<!--        <el-button type="primary" @click="login"  size="small">-->
+<!--            退出登录-->
 <!--        </el-button>-->
-        <el-button type="success" @click="this.$router.back()" icon="el-icon-full-screen" size="small">
-            back
-        </el-button>
+<!--        <el-button type="success" @click="this.$router.back()" icon="el-icon-full-screen" size="small">-->
+<!--            back-->
+<!--        </el-button>-->
+<!--        {{isOnTop}}-->
         <el-button type="primary" @click="minimize" icon="el-icon-minus" size="small">
         </el-button>
         <el-button type="success" @click="close" icon="el-icon-close" size="small">
         </el-button>
-        <el-button type="success" @click="onTop" icon="el-icon-caret-top" size="small">
+        <el-button type="success" @click="onTop" :icon="isOnTop?'fa fa-chevron-up':'fa fa-chevron-down'" size="small">
         </el-button>
         <el-button type="success" @click="maximize" icon="el-icon-full-screen" size="small">
         </el-button>
-        <el-button type="success" @click="openWin"  size="small">
-            新窗口
-        </el-button>
+<!--        <el-button type="success" @click="openWin"  size="small">-->
+<!--            新窗口-->
+<!--        </el-button>-->
 
 <!--        <el-button type="success" @click="this.$router.push('/fastopen')" icon="el-icon-full-screen" size="small">-->
 <!--            home-->
@@ -45,6 +44,14 @@
         //
         //     }
         // }
+        data(){
+            return{
+                isOnTop:false,
+            }
+        },
+        mounted() {
+            this.isOnTop=remote.getCurrentWindow().isAlwaysOnTop()
+        },
         methods:{
             // 点击最小化按钮调用的方法
             minimize() {
@@ -59,6 +66,7 @@
             onTop(){
                 let win= remote.getCurrentWindow()
                 remote.getCurrentWindow().setAlwaysOnTop(!win.isAlwaysOnTop())
+                this.isOnTop=win.isAlwaysOnTop()
             },
             maximize(){
                 remote.getCurrentWindow().maximize()

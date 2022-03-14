@@ -132,6 +132,7 @@
     }
     .text {
         font-size: 20px!important;
+
     }
 
     .item {
@@ -146,7 +147,8 @@
     }
 
     .task-content{
-
+        overflow: auto;
+        height: 300px;
     }
     .task-content-show{
         overflow: auto;
@@ -154,5 +156,7 @@
         /*font-size: 18px;*/
         font-size: 18px!important;
         line-height: 35px;
+        /*background: red;*/
+
     }
 </style>
